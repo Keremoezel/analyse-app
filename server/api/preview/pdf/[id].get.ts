@@ -1,6 +1,7 @@
 import { db, schema } from '../../../db'
 import { eq } from 'drizzle-orm'
 import { readFileSync } from 'fs'
+import { fileURLToPath } from 'url'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')
@@ -113,8 +114,9 @@ export default defineEventHandler(async (event) => {
         day: 'numeric'
     })
 
-    // Load PDF template - use import.meta.url for serverless compatibility
-    const templatePath = new URL('../../../templates/pdf-template.html', import.meta.url).pathname
+    // Load PDF template - use fileURLToPath for proper path resolution
+    const templateUrl = new URL('../../../templates/pdf-template.html', import.meta.url)
+    const templatePath = fileURLToPath(templateUrl)
     let html = readFileSync(templatePath, 'utf-8')
 
     // Replace placeholders
