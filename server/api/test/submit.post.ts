@@ -89,6 +89,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Save result
+    const slug = crypto.randomUUID()
     const result = await db.insert(schema.results).values({
         userId: user!.id,
         dScore: scores.D,
@@ -96,11 +97,12 @@ export default defineEventHandler(async (event) => {
         sScore: scores.S,
         gScore: scores.G,
         rawData: body.answers,
+        slug: slug,
     }).returning()
 
     return {
         success: true,
-        resultId: result[0].id,
+        resultId: result[0].slug, // Return SLUG instead of ID
         scores,
     }
 })

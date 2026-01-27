@@ -6,6 +6,7 @@ interface ResultRow {
   iScore: number
   sScore: number
   gScore: number
+  slug: string
   createdAt: string
 }
 
@@ -132,7 +133,7 @@ function formatDate(dateStr: string) {
                 <td class="score-col"><span class="badge g">{{ row.gScore }}</span></td>
                 <td class="date-cell">{{ formatDate(row.createdAt) }}</td>
                 <td class="actions-cell">
-                  <NuxtLink :to="`/result/${row.id}`" class="view-btn">
+                  <NuxtLink :to="`/result/${row.slug}`" class="view-btn">
                     Ansehen
                   </NuxtLink>
                   <button @click="deleteResult(row.id)" class="delete-btn" title="Löschen">

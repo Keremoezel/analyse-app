@@ -10,6 +10,7 @@ export default defineEventHandler(async () => {
         sScore: schema.results.sScore,
         gScore: schema.results.gScore,
         createdAt: schema.results.createdAt,
+        slug: schema.results.slug,
     })
         .from(schema.results)
         .leftJoin(schema.users, eq(schema.results.userId, schema.users.id))

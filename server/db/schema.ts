@@ -15,6 +15,7 @@ export const results = pgTable('results', {
     iScore: integer('i_score').notNull(),
     sScore: integer('s_score').notNull(),
     gScore: integer('g_score').notNull(),
-    rawData: jsonb('raw_data'), // Postgres has native JSON support!
+    rawData: jsonb('raw_data'),
+    slug: text('slug').notNull().unique(), // Secure URL identifier
     createdAt: timestamp('created_at').defaultNow().notNull(),
 })

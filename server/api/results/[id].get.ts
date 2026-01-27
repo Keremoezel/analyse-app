@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm'
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')
 
-    if (!id || isNaN(Number(id))) {
+    if (!id) {
         throw createError({
             statusCode: 400,
             message: 'Ungültige Ergebnis-ID',
@@ -12,9 +12,9 @@ export default defineEventHandler(async (event) => {
     }
 
     const result = await db.query.results.findFirst({
-        where: eq(schema.results.id, Number(id)),
+        where: eq(schema.results.slug, id),
         with: {
-            // We need to define relation for this to work
+            // Relation if needed
         },
     })
 
