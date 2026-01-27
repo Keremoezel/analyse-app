@@ -10,6 +10,12 @@ export default defineNuxtConfig({
   // Vercel deployment preset
   nitro: {
     preset: 'vercel',
+    serverAssets: [
+      {
+        baseName: 'templates',
+        dir: './server/templates'
+      }
+    ]
   },
 
   eslint: {
