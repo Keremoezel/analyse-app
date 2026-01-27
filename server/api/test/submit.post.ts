@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
         iScore: scores.I,
         sScore: scores.S,
         gScore: scores.G,
-        rawData: JSON.stringify(body.answers),
+        rawData: body.answers,
     }).returning()
 
     return {

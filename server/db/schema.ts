@@ -1,20 +1,20 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
+import { pgTable, text, integer, serial, timestamp, jsonb } from 'drizzle-orm/pg-core'
 
 // Users table
-export const users = sqliteTable('users', {
-    id: integer('id').primaryKey({ autoIncrement: true }),
+export const users = pgTable('users', {
+    id: serial('id').primaryKey(),
     email: text('email').notNull().unique(),
-    createdAt: integer('created_at').notNull().$defaultFn(() => Date.now()),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
 })
 
 // Results table
-export const results = sqliteTable('results', {
-    id: integer('id').primaryKey({ autoIncrement: true }),
+export const results = pgTable('results', {
+    id: serial('id').primaryKey(),
     userId: integer('user_id').notNull().references(() => users.id),
     dScore: integer('d_score').notNull(),
     iScore: integer('i_score').notNull(),
     sScore: integer('s_score').notNull(),
     gScore: integer('g_score').notNull(),
-    rawData: text('raw_data'),
-    createdAt: integer('created_at').notNull().$defaultFn(() => Date.now()),
+    rawData: jsonb('raw_data'), // Postgres has native JSON support!
+    createdAt: timestamp('created_at').defaultNow().notNull(),
 })
