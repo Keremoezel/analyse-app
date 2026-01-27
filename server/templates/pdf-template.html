@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <title>DISG Persönlichkeitsanalyse - {{NAME}}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .page {
+            width: 100%;
+            max-width: 210mm;
+            padding: 30mm 20mm 20mm 20mm;
+            background: white;
+            page-break-after: always;
+            margin: 0 auto 40px auto;
+            box-sizing: border-box;
+            overflow: visible;
+        }
+
+        @media print {
+            .page {
+                width: 210mm;
+                min-height: 297mm;
+                margin: 0;
+            }
+        }
+
+        .cover-page {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 20mm;
+            min-height: 600px;
+        }
+
+        .cover-page>div {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .cover-page h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .cover-page .subtitle {
+            font-size: 24px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .cover-page .user-name {
+            font-size: 32px;
+            margin-top: 60px;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .cover-page .date {
+            margin-top: 30px;
+            font-size: 16px;
+            opacity: 0.8;
+        }
+
+        /* Content Pages */
+        .header {
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            color: #667eea;
+            font-size: 28px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            font-size: 22px;
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section h4 {
+            color: #555;
+            font-size: 18px;
+            margin: 20px 0 10px 0;
+        }
+
+        .section p {
+            font-size: 14px;
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        .section ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        /* Score Display */
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .score-card {
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .score-card.d-type {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 2px solid #dc3545;
+        }
+
+        .score-card.i-type {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2px solid #fd7e14;
+        }
+
+        .score-card.s-type {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #28a745;
+        }
+
+        .score-card.g-type {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 2px solid #007bff;
+        }
+
+        .score-card .type-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .score-card .score-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .score-card .score-label {
+            font-size: 12px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Primary Type Highlight */
+        .primary-type-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 30px 0;
+            box-shadow: 0 4px 20px rgba(253, 203, 110, 0.3);
+        }
+
+        .primary-type-box .label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            color: #2d3436;
+            margin-bottom: 10px;
+        }
+
+        .primary-type-box .type-name {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2d3436;
+        }
+
+        /* Strengths & Challenges */
+        .two-column {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 15px 0;
+        }
+
+        .strength-box {
+            background: #f0fdf4;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+
+        .challenge-box {
+            background: #fff5f5;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .box-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        /* Traits List */
+        .traits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .trait-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+            padding: 10px 15px;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .page-footer {
+            margin-top: 40px;
+            padding-top: 15px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* Chart Placeholder */
+        .chart-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 40px 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .chart-placeholder {
+            text-align: center;
+            color: #6c757d;
+        }
+
+        /* Quadrant Chart */
+        .quadrant-chart {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2px;
+            background: #dee2e6;
+            border-radius: 12px;
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .quadrant-box {
+            padding: 25px 15px;
+            text-align: center;
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .q-top-left {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border-top-left-radius: 10px;
+        }
+
+        .q-top-right {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border-top-right-radius: 10px;
+        }
+
+        .q-bottom-left {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-bottom-left-radius: 10px;
+        }
+
+        .q-bottom-right {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border-bottom-right-radius: 10px;
+        }
+
+        .q-label {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .q-top-left .q-label {
+            color: #dc3545;
+        }
+
+        .q-top-right .q-label {
+            color: #fd7e14;
+        }
+
+        .q-bottom-left .q-label {
+            color: #007bff;
+        }
+
+        .q-bottom-right .q-label {
+            color: #28a745;
+        }
+
+        .q-name {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .q-score {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .axis-label-top,
+        .axis-label-bottom,
+        .axis-label-left,
+        .axis-label-right {
+            display: none;
+        }
+
+        /* Bar Chart */
+        .bar-chart {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .bar-item {
+            margin-bottom: 20px;
+        }
+
+        .bar-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .bar-icon {
+            font-size: 18px;
+            margin-right: 8px;
+        }
+
+        .bar-name {
+            flex: 1;
+        }
+
+        .bar-wrapper {
+            background: #e9ecef;
+            border-radius: 20px;
+            height: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 12px;
+            transition: width 0.3s ease;
+            min-width: 50px;
+        }
+
+        .bar-value {
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .bar-d {
+            background: linear-gradient(90deg, #dc3545 0%, #c82333 100%);
+        }
+
+        .bar-i {
+            background: linear-gradient(90deg, #fd7e14 0%, #e8590c 100%);
+        }
+
+        .bar-s {
+            background: linear-gradient(90deg, #28a745 0%, #218838 100%);
+        }
+
+        .bar-g {
+            background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+
+        .info-box p {
+            color: #1565c0;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Cover Page -->
+    <div class="page cover-page">
+        <div>
+            <h1>🎯 DISG</h1>
+            <div class="subtitle">Persönlichkeitsanalyse</div>
+            <div class="user-name">{{NAME}}</div>
+            <div class="date">Erstellt am {{DATE}}</div>
+        </div>
+    </div>
+
+    <!-- Page 1: Overview & Scores -->
+    <div class="page">
+        <div class="header">
+            <h2>Ihre Ergebnisse im Überblick</h2>
+        </div>
+
+        <div class="section">
+            <p>
+                Sehr geehrte/r {{NAME}},
+            </p>
+            <p>
+                vielen Dank für die Teilnahme an unserem DISG Persönlichkeitstest. Diese Analyse gibt Ihnen
+                einen tiefen Einblick in Ihre Persönlichkeitsstruktur und hilft Ihnen, Ihre Stärken besser
+                zu verstehen und gezielt einzusetzen.
+            </p>
+        </div>
+
+        <div class="section">
+            <h3>Ihre Punkteverteilung</h3>
+            <div class="score-grid">
+                <div class="score-card d-type">
+                    <div class="type-name">🔥 Dominant</div>
+                    <div class="score-value">{{D_SCORE}}</div>
+                    <div class="score-label">Punkte</div>
+                </div>
+                <div class="score-card i-type">
+                    <div class="type-name">⭐ Initiativ</div>
+                    <div class="score-value">{{I_SCORE}}</div>
+                    <div class="score-label">Punkte</div>
+                </div>
+                <div class="score-card s-type">
+                    <div class="type-name">🤝 Stetig</div>
+                    <div class="score-value">{{S_SCORE}}</div>
+                    <div class="score-label">Punkte</div>
+                </div>
+                <div class="score-card g-type">
+                    <div class="type-name">📊 Gewissenhaft</div>
+                    <div class="score-value">{{G_SCORE}}</div>
+                    <div class="score-label">Punkte</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="primary-type-box">
+            <div class="label">Ihr Hauptpersönlichkeitstyp</div>
+            <div class="type-name">{{PRIMARY_TYPE_ICON}} {{PRIMARY_TYPE_NAME}}</div>
+        </div>
+
+        <div class="page-footer">
+            Seite 1 | DISG Persönlichkeitsanalyse © 2026
+        </div>
+    </div>
+
+    <!-- Page 2: Detailed Analysis -->
+    <div class="page">
+        <div class="header">
+            <h2>Detaillierte Analyse: {{PRIMARY_TYPE_NAME}}</h2>
+        </div>
+
+        <div class="section">
+            <h3>Was zeichnet Sie aus?</h3>
+            <p>{{PRIMARY_TYPE_DESCRIPTION}}</p>
+        </div>
+
+        <div class="section">
+            <h3>Ihre charakteristischen Eigenschaften</h3>
+            <div class="traits-grid">
+                {{#each TRAITS}}
+                <div class="trait-badge">{{this}}</div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Stärken & Entwicklungsfelder</h3>
+            <div class="two-column">
+                <div class="strength-box">
+                    <div class="box-title">✅ Ihre Stärken</div>
+                    <ul>
+                        {{#each STRENGTHS}}
+                        <li>{{this}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+                <div class="challenge-box">
+                    <div class="box-title">🎯 Entwicklungsfelder</div>
+                    <ul>
+                        {{#each CHALLENGES}}
+                        <li>{{this}}</li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            Seite 2 | DISG Persönlichkeitsanalyse © 2026
+        </div>
+    </div>
+
+    <!-- Page 3: Communication & Career -->
+    <div class="page">
+        <div class="header">
+            <h2>Kommunikation & Beruf</h2>
+        </div>
+
+        <div class="section">
+            <h3>💬 Kommunikationstipps für Ihren Typ</h3>
+            <h4>So kommunizieren Sie am effektivsten:</h4>
+            <ul>
+                <li>Bevorzugen Sie {{COMMUNICATION_STYLE}}</li>
+                <li>Achten Sie auf {{COMMUNICATION_FOCUS}}</li>
+                <li>Vermeiden Sie {{COMMUNICATION_AVOID}}</li>
+            </ul>
+
+            <h4>Im Umgang mit anderen Typen:</h4>
+            <p>{{INTERACTION_TIPS}}</p>
+        </div>
+
+        <div class="section">
+            <h3>💼 Berufliche Empfehlungen</h3>
+            <h4>Passende Tätigkeitsbereiche:</h4>
+            <ul>
+                <li>{{CAREER_AREA_1}}</li>
+                <li>{{CAREER_AREA_2}}</li>
+                <li>{{CAREER_AREA_3}}</li>
+            </ul>
+
+            <h4>Ideale Arbeitsumgebung:</h4>
+            <p>{{WORK_ENVIRONMENT}}</p>
+        </div>
+
+        <div class="info-box">
+            <p>
+                <strong>💡 Tipp:</strong> Nutzen Sie Ihre Stärken bewusst und arbeiten Sie kontinuierlich
+                an Ihren Entwicklungsfeldern. Persönlichkeitsentwicklung ist ein lebenslanger Prozess!
+            </p>
+        </div>
+
+        <div class="page-footer">
+            Seite 3 | DISG Persönlichkeitsanalyse © 2026
+        </div>
+    </div>
+
+    <!-- Page 4: Visual Chart & Conclusion -->
+    <div class="page">
+        <div class="header">
+            <h2>Grafische Auswertung</h2>
+        </div>
+
+        <div class="section">
+            <h3>Ihre Punkteverteilung im Vergleich</h3>
+            <div class="chart-container">
+                <div class="bar-chart">
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span class="bar-icon">🔥</span>
+                            <span class="bar-name">Dominant</span>
+                        </div>
+                        <div class="bar-wrapper">
+                            <div class="bar-fill bar-d" style="width: calc({{D_SCORE}} * 2.5%);">
+                                <span class="bar-value">{{D_SCORE}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span class="bar-icon">⭐</span>
+                            <span class="bar-name">Initiativ</span>
+                        </div>
+                        <div class="bar-wrapper">
+                            <div class="bar-fill bar-i" style="width: calc({{I_SCORE}} * 2.5%);">
+                                <span class="bar-value">{{I_SCORE}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span class="bar-icon">🤝</span>
+                            <span class="bar-name">Stetig</span>
+                        </div>
+                        <div class="bar-wrapper">
+                            <div class="bar-fill bar-s" style="width: calc({{S_SCORE}} * 2.5%);">
+                                <span class="bar-value">{{S_SCORE}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bar-item">
+                        <div class="bar-label">
+                            <span class="bar-icon">📊</span>
+                            <span class="bar-name">Gewissenhaft</span>
+                        </div>
+                        <div class="bar-wrapper">
+                            <div class="bar-fill bar-g" style="width: calc({{G_SCORE}} * 2.5%);">
+                                <span class="bar-value">{{G_SCORE}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Zusammenfassung</h3>
+            <p>
+                Als <strong>{{PRIMARY_TYPE_NAME}}</strong>-Typ bringen Sie einzigartige Qualitäten mit,
+                die Sie in vielen Bereichen erfolgreich machen. Ihre Analyse zeigt, dass Sie besonders
+                stark in {{KEY_STRENGTH}} sind.
+            </p>
+            <p>
+                Nutzen Sie diese Erkenntnisse, um Ihre persönliche und berufliche Entwicklung gezielt
+                voranzutreiben. Jeder Persönlichkeitstyp hat seine Berechtigung und seinen Wert –
+                es geht darum, sich selbst besser zu verstehen und authentisch zu bleiben.
+            </p>
+        </div>
+
+        <div class="info-box">
+            <p>
+                <strong>🔗 Online-Zugang:</strong> Ihre Ergebnisse sind auch online verfügbar unter:<br>
+                {{RESULT_URL}}
+            </p>
+        </div>
+
+        <div class="page-footer">
+            Seite 4 | DISG Persönlichkeitsanalyse © 2026
+        </div>
+    </div>
+</body>
+
+</html>

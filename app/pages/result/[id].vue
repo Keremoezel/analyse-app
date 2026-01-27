@@ -268,6 +268,21 @@ function printPage() {
         <NuxtLink to="/" class="action-btn primary">Neuen Test starten</NuxtLink>
         <button @click="printPage" class="action-btn secondary">📄 Drucken</button>
       </div>
+
+      <!-- Template Preview Section -->
+      <div class="template-preview-section">
+        <h3>📧 Email-Vorschau (für Entwicklung)</h3>
+        <p class="preview-desc">Sehen Sie, wie Ihre Analyse-Email und das PDF-Dokument aussehen würden:</p>
+        <div class="preview-buttons">
+          <a :href="`/api/preview/pdf/${resultId}`" target="_blank" class="preview-btn pdf">
+            <span class="btn-icon">📄</span>
+            <span class="btn-text">
+              <strong>PDF-Report ansehen</strong>
+              <small>Öffnet in neuem Tab</small>
+            </span>
+          </a>
+        </div>
+      </div>
     </div>
     
     <div v-else class="loading">
@@ -704,6 +719,84 @@ function printPage() {
 
 .action-btn.secondary:hover {
   background: #e0e0e0;
+}
+
+/* Template Preview Section */
+.template-preview-section {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 16px;
+  border: 2px dashed #dee2e6;
+}
+
+.template-preview-section h3 {
+  color: #495057;
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.preview-desc {
+  color: #6c757d;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.preview-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.preview-btn {
+  flex: 1;
+  min-width: 250px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: white;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 2px solid transparent;
+}
+
+.preview-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.preview-btn.pdf {
+  border-color: #dc3545;
+}
+
+.preview-btn.pdf:hover {
+  border-color: #c82333;
+  background: #fff5f5;
+}
+
+.preview-btn .btn-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.preview-btn .btn-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: left;
+}
+
+.preview-btn strong {
+  color: #212529;
+  font-size: 1rem;
+}
+
+.preview-btn small {
+  color: #6c757d;
+  font-size: 0.85rem;
 }
 
 /* Loading & Error */
