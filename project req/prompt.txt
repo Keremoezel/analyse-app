@@ -1,0 +1,56 @@
+Role: Senior Full Stack Developer
+Tech Stack: Nuxt 3, Nuxt UI, TailwindCSS, TypeScript, Drizzle ORM (SQLite veya Postgres), Server Side Rendering (SSR).
+
+Objective:
+Create a web application for a DISC (DISG) personality test based on a provided German document. The application must be entirely in German.
+
+Key Features & Requirements:
+
+1.  **User Flow:**
+    * **Landing Page:** User enters their Email address to start.
+    * **Test Page:**
+        * [cite_start]A 3-minute countdown timer starts immediately.
+        * The test consists of 10 rows (questions).
+        * Each row has 4 adjectives. The user MUST assign a rank to each adjective: 4 (Most like me), 3, 2, 1 (Least like me).
+        * Constraint: In a single row, scores (4, 3, 2, 1) must be unique. No two adjectives in the same row can have the same score.
+        * The user cannot proceed/submit without filling all rows correctly.
+    * **Submission:**
+        * On submit (or when time expires), data is sent to the API.
+        * The system calculates the totals for D, I, S, G based on the mapping below.
+        * Results are saved to the database linked to the email.
+        * An email is sent to the user with their results (mock this function for now).
+    * **Result Page:**
+        * Displays the user's DISC profile with a chart or progress bars.
+        * Color Code: D = Red, I = Yellow, S = Green, G = Blue.
+
+2.  **Admin Dashboard:**
+    * A protected route (`/admin`) to view a list of all submissions (Email + D/I/S/G scores + Date).
+
+3.  **Data & Logic Mapping (From Source Document):**
+    Use the following mapping to calculate scores. The key is the adjective (German), the value is the Type (D, I, S, G).
+
+    * **Row 1:** optimistisch (I), selbstsicher (D), genau (G), harmonisch (S)
+    * **Row 2:** ergebnisorientiert (D), beständig (S), enthusiastisch (I), selbstdiszipliniert (G)
+    * **Row 3:** nachdenkend (G), kontaktfreudig (I), zuhörend (S), wagemutig (D)
+    * **Row 4:** positiv (I), risikofreudig (D), zurückhaltend (G), unterstützend (S)
+    * **Row 5:** geduldig (S), spontan (I), entscheidungsfreudig (D), kontrolliert (G)
+    * **Row 6:** kritisch (G), impulsiv (I), zuverlässig (S), zielorientiert (D)
+    * **Row 7:** gesellig (I), unauffällig (S), furchtlos (D), strukturiert (G)
+    * **Row 8:** bestimmend (D), sorgfältig (G), teamfähig (S), begeistert (I)
+    * **Row 9:** vertrauensvoll (S), analytisch (G), beliebt (I), kraftvoll (D)
+    * **Row 10:** hartnäckig (D), überzeugend (I), planend (G), vermittelnd (S)
+
+    *Calculation Logic:*
+    For each row, if user gives "optimistisch" 4 points, add 4 to 'I' total.
+    [cite_start]Checksum: The total sum of D+I+S+G must be exactly 100[cite: 8].
+
+4.  **UI Implementation:**
+    * Use `Nuxt UI` components.
+    * For the ranking input, create a smart component that ensures 1-2-3-4 are used exactly once per row.
+    * Use a clean, professional design suitable for a personality test.
+
+5.  **Database Schema (Drizzle):**
+    * `users`: id, email, created_at
+    * `results`: id, user_id, d_score, i_score, s_score, g_score, raw_data (json), created_at
+
+Please provide the project structure, the Drizzle schema, the Nuxt page components for the test logic, and the server API handler for calculation and saving.

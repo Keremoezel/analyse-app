@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
+    '@nuxt/ui',
     '@nuxt/eslint',
   ],
   devtools: { enabled: true },
@@ -17,18 +18,13 @@ export default defineNuxtConfig({
     },
   },
 
-  // Runtime config for Vercel environment variables
+  // Runtime config
   runtimeConfig: {
-    // Server-side only
-    postgres: {
-      url: process.env.POSTGRES_URL,
-    },
-    blob: {
-      token: process.env.BLOB_READ_WRITE_TOKEN,
-    },
-    kv: {
-      url: process.env.KV_REST_API_URL,
-      token: process.env.KV_REST_API_TOKEN,
-    },
+    // Server-side only (kept secret)
+    adminPassword: '', // NUXT_ADMIN_PASSWORD variables automatically populate this
+    // Public (exposed to client)
+    public: {
+      // client side keys
+    }
   },
 })
