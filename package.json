@@ -9,7 +9,8 @@
     "deploy-vercel": "npx vercel deploy",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "nuxt typecheck",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@libsql/client": "^0.15.15",
