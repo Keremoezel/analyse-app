@@ -1,5 +1,6 @@
 import { db, schema } from '../../../db'
 import { eq } from 'drizzle-orm'
+import { pdfTemplate } from '../../../utils/pdf-template'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')
@@ -112,27 +113,12 @@ export default defineEventHandler(async (event) => {
         day: 'numeric'
     })
 
-    // Load PDF template using Nitro's storage API for serverless compatibility
-    const storage = useStorage('assets:templates')
+    // Generate HTML from template
+    const traitsHtml = data.traits.map(t => `<div class="trait-badge">${t}</div>`).join('\n                ')
+    const strengthsHtml = data.strengths.map(s => `<li>${s}</li>`).join('\n                        ')
+    const challengesHtml = data.challenges.map(c => `<li>${c}</li>`).join('\n                        ')
 
-    // Try with and without extension (Nitro sometimes strips extensions)
-    let html = await storage.getItem('pdf-template.html') as string
-    if (!html) {
-        html = await storage.getItem('pdf-template') as string
-    }
-
-    if (!html) {
-        // Log available keys for debugging
-        const keys = await storage.getKeys()
-        console.error('Available template keys:', keys)
-        throw createError({
-            statusCode: 500,
-            message: `Template nicht gefunden. Verfügbare Keys: ${keys.join(', ')}`,
-        })
-    }
-
-    // Replace placeholders
-    html = html
+    let html = pdfTemplate
         .replace(/{{NAME}}/g, name)
         .replace(/{{DATE}}/g, date)
         .replace(/{{D_SCORE}}/g, scores.D.toString())
@@ -152,20 +138,14 @@ export default defineEventHandler(async (event) => {
         .replace(/{{WORK_ENVIRONMENT}}/g, data.workEnvironment)
         .replace(/{{KEY_STRENGTH}}/g, data.keyStrength)
         .replace(/{{RESULT_URL}}/g, `${getRequestURL(event).origin}/result/${id}`)
+        .replace(/{{TRAITS_HTML}}/g, traitsHtml)
+        .replace(/{{STRENGTHS_HTML}}/g, strengthsHtml)
+        .replace(/{{CHALLENGES_HTML}}/g, challengesHtml)
 
-    // Replace traits array (simple approach)
-    const traitsHtml = data.traits.map(t => `<div class="trait-badge">${t}</div>`).join('\n                ')
-    html = html.replace(/{{#each TRAITS}}[\s\S]*?{{\/each}}/g, traitsHtml)
-
-    // Replace strengths array
-    const strengthsHtml = data.strengths.map(s => `<li>${s}</li>`).join('\n                        ')
-    html = html.replace(/{{#each STRENGTHS}}[\s\S]*?{{\/each}}/g, strengthsHtml)
-
-    // Replace challenges array
-    const challengesHtml = data.challenges.map(c => `<li>${c}</li>`).join('\n                        ')
-    html = html.replace(/{{#each CHALLENGES}}[\s\S]*?{{\/each}}/g, challengesHtml)
-
-    // Return HTML with proper content type
+    // Set headers for file download
+    const filename = `DISG-Analyse-${name}.html`
     setResponseHeader(event, 'Content-Type', 'text/html; charset=utf-8')
+    setResponseHeader(event, 'Content-Disposition', `attachment; filename="${filename}"`)
+
     return html
 })
