@@ -114,12 +114,20 @@ export default defineEventHandler(async (event) => {
 
     // Load PDF template using Nitro's storage API for serverless compatibility
     const storage = useStorage('assets:templates')
+
+    // Try with and without extension (Nitro sometimes strips extensions)
     let html = await storage.getItem('pdf-template.html') as string
+    if (!html) {
+        html = await storage.getItem('pdf-template') as string
+    }
 
     if (!html) {
+        // Log available keys for debugging
+        const keys = await storage.getKeys()
+        console.error('Available template keys:', keys)
         throw createError({
             statusCode: 500,
-            message: 'Template nicht gefunden',
+            message: `Template nicht gefunden. Verfügbare Keys: ${keys.join(', ')}`,
         })
     }
 

@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   // Runtime config
   runtimeConfig: {
     // Server-side only (kept secret)
-    adminPassword: '', // NUXT_ADMIN_PASSWORD variables automatically populate this
+    adminPassword: '',
 
     // Public (exposed to client)
     public: {
