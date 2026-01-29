@@ -7,6 +7,19 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   compatibilityDate: '2025-12-11',
 
+
+  app: {
+    head: {
+      title: 'DISG Persönlichkeitstest',
+      htmlAttrs: {
+        lang: 'de',
+      },
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/gemini.png' },
+      ],
+    },
+  },
+
   // Vercel deployment preset
   nitro: {
     preset: 'vercel',

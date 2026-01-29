@@ -10,14 +10,15 @@ useSeoMeta({
     <!-- Navigation Bar -->
     <nav class="topbar">
       <NuxtLink to="/" class="logo">
-        <span class="logo-icon">🎯</span>
+        <Icon name="heroicons:chart-pie-solid" class="logo-icon" />
         <span class="logo-text">DISG Test</span>
       </NuxtLink>
       
       <div class="nav-links">
         <NuxtLink to="/" class="nav-link">Home</NuxtLink>
         <NuxtLink to="/admin" class="nav-link admin-link">
-          🔒 Admin
+          <Icon name="heroicons:lock-closed" size="16" />
+          Admin
         </NuxtLink>
       </div>
     </nav>

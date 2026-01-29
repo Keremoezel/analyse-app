@@ -212,6 +212,14 @@ function backToTest() {
             </div>
           </div>
           
+          <div class="email-warning">
+            <span class="email-icon">📧</span>
+            <div>
+              <strong>E-Mail-Adresse erforderlich</strong>
+              <p>Nach Abschluss des Tests benötigen Sie eine E-Mail-Adresse, um Ihr persönliches DISG-Profil zu erhalten.</p>
+            </div>
+          </div>
+
           <div class="time-notice">
             <span class="time-icon">⏱️</span>
             <div>
@@ -473,13 +481,39 @@ function backToTest() {
   font-size: 0.85rem;
 }
 
+.email-warning {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+  border-radius: 10px;
+  margin-top: 1.5rem;
+  align-items: center;
+  border: 1px solid #b6d4db;
+}
+
+.email-icon {
+  font-size: 2rem;
+}
+
+.email-warning strong {
+  display: block;
+  color: #0c5460;
+}
+
+.email-warning p {
+  margin: 0;
+  color: #0c5460;
+  font-size: 0.9rem;
+}
+
 .time-notice {
   display: flex;
   gap: 1rem;
   padding: 1rem;
   background: linear-gradient(135deg, #fff3cd, #ffeeba);
   border-radius: 10px;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   align-items: center;
 }
 

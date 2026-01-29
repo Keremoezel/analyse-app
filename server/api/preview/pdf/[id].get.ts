@@ -41,8 +41,24 @@ export default defineEventHandler(async (event) => {
         scores[a[0] as keyof typeof scores] > scores[b[0] as keyof typeof scores] ? a : b
     )[0] as 'D' | 'I' | 'S' | 'G'
 
+    interface TypeInfo {
+        name: string
+        icon: string
+        description: string
+        traits: string[]
+        strengths: string[]
+        challenges: string[]
+        communicationStyle: string
+        communicationFocus: string
+        communicationAvoid: string
+        interactionTips: string
+        careerAreas: [string, string, string] // Tuple with exactly 3 elements
+        workEnvironment: string
+        keyStrength: string
+    }
+
     // Type data
-    const typeData = {
+    const typeData: Record<'D' | 'I' | 'S' | 'G', TypeInfo> = {
         D: {
             name: 'Dominant',
             icon: '🔥',

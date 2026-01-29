@@ -102,7 +102,7 @@ export default defineEventHandler(async (event) => {
 
     return {
         success: true,
-        resultId: result[0].slug, // Return SLUG instead of ID
+        resultId: slug, // Return SLUG instead of ID
         scores,
     }
 })
