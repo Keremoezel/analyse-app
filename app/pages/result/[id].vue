@@ -23,6 +23,7 @@ const typeDescriptions = {
     color: '#dc3545',
     bgColor: '#fef2f2',
     icon: '🔥',
+    image: '/reedpeople.png',
     traits: ['Ergebnisorientiert', 'Entscheidungsfreudig', 'Wettbewerbsorientiert', 'Direkt', 'Zielstrebig'],
     description: 'Sie sind eine durchsetzungsstarke Persönlichkeit, die Herausforderungen liebt und schnelle Entscheidungen trifft.',
     strengths: ['Führungsstärke', 'Entschlossenheit', 'Problemlösung'],
@@ -33,6 +34,7 @@ const typeDescriptions = {
     color: '#facc15',
     bgColor: '#fefce8',
     icon: '⭐',
+    image: '/yellowpeople.png',
     traits: ['Enthusiastisch', 'Optimistisch', 'Kontaktfreudig', 'Überzeugend', 'Kreativ'],
     description: 'Sie sind eine inspirierende Persönlichkeit, die Menschen begeistert und gerne im Mittelpunkt steht.',
     strengths: ['Kommunikation', 'Motivation', 'Networking'],
@@ -43,6 +45,7 @@ const typeDescriptions = {
     color: '#22c55e',
     bgColor: '#f0fdf4',
     icon: '🌿',
+    image: '/greenpeople.png',
     traits: ['Geduldig', 'Zuverlässig', 'Teamfähig', 'Unterstützend', 'Loyal'],
     description: 'Sie sind eine harmonische Persönlichkeit, die Stabilität schätzt und anderen hilft.',
     strengths: ['Teamarbeit', 'Zuhören', 'Beständigkeit'],
@@ -53,6 +56,7 @@ const typeDescriptions = {
     color: '#3b82f6',
     bgColor: '#eff6ff',
     icon: '🎯',
+    image: '/bluepeople.png',
     traits: ['Analytisch', 'Genau', 'Strukturiert', 'Qualitätsbewusst', 'Planend'],
     description: 'Sie sind eine präzise Persönlichkeit, die Qualität und Genauigkeit über alles stellt.',
     strengths: ['Analyse', 'Planung', 'Qualitätssicherung'],
@@ -181,8 +185,10 @@ function printPage() {
         <p class="subtitle">Persönlichkeitsanalyse für {{ result.email }}</p>
       </header>
 
-      <!-- Main Result Card -->
+      <!-- Main Result Card with watermark -->
       <div class="main-result" :style="{ borderColor: typeDescriptions[dominantType].color, background: typeDescriptions[dominantType].bgColor }">
+        <div class="watermark-bg" :style="{ backgroundImage: `url(${typeDescriptions[dominantType].image})` }"></div>
+        
         <div class="result-type">
           <span class="type-letter" :style="{ background: typeDescriptions[dominantType].color }">
             {{ dominantType }}
@@ -204,7 +210,7 @@ function printPage() {
         </div>
       </div>
 
-      <!-- DISG Quadrant Diagram -->
+      <!-- DISG Quadrant Diagram with watermarks -->
       <div class="quadrant-section">
         <h3>Ihr Persönlichkeitsprofil</h3>
         <div class="quadrant-wrapper">
@@ -217,21 +223,25 @@ function printPage() {
             
             <!-- Main quadrant grid -->
             <div class="quadrant-grid">
-              <!-- Quadrant boxes - G (Blau) top-left, D (Rot) top-right, S (Grün) bottom-left, I (Gelb) bottom-right -->
+              <!-- Quadrant boxes with watermark backgrounds -->
               <div class="quadrant q-g">
-                <span class="q-letter">G</span>
+                <div class="quadrant-watermark" style="background-image: url('/bluepeople.png')"></div>
+                <span class="q-letter">B</span>
                 <span class="q-name">gewissenhaft</span>
               </div>
               <div class="quadrant q-d">
-                <span class="q-letter">D</span>
+                <div class="quadrant-watermark" style="background-image: url('/reedpeople.png')"></div>
+                <span class="q-letter">R</span>
                 <span class="q-name">dominant</span>
               </div>
               <div class="quadrant q-s">
-                <span class="q-letter">S</span>
+                <div class="quadrant-watermark" style="background-image: url('/greenpeople.png')"></div>
+                <span class="q-letter">G</span>
                 <span class="q-name">stetig</span>
               </div>
               <div class="quadrant q-i">
-                <span class="q-letter">I</span>
+                <div class="quadrant-watermark" style="background-image: url('/yellowpeople.png')"></div>
+                <span class="q-letter">Y</span>
                 <span class="q-name">initiativ</span>
               </div>
               
@@ -314,9 +324,10 @@ function printPage() {
         </div>
       </div>
 
-      <!-- Secondary Type -->
+      <!-- Secondary Type with watermark -->
       <div v-if="secondaryType" class="secondary-section" :style="{ background: typeDescriptions[secondaryType].bgColor }">
-        <h3>Ihre SekundärFarbe: {{ typeDescriptions[secondaryType].name }}</h3>
+        <div class="watermark-bg secondary-watermark" :style="{ backgroundImage: `url(${typeDescriptions[secondaryType].image})` }"></div>
+        <h3>Ihre Sekundärfarbe: {{ typeDescriptions[secondaryType].name }}</h3>
         <p>{{ typeDescriptions[secondaryType].description }}</p>
       </div>
 
@@ -468,7 +479,7 @@ function printPage() {
   font-size: 1rem;
 }
 
-/* Main Result Card */
+/* Main Result Card with watermark */
 .main-result {
   background: white;
   border-radius: 16px;
@@ -476,6 +487,29 @@ function printPage() {
   margin-bottom: 1.5rem;
   border-left: 5px solid;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.watermark-bg {
+  position: absolute;
+  top: 50%;
+  right: -10%;
+  width: 50%;
+  height: 120%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.08;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.secondary-watermark {
+  width: 40%;
+  right: 5%;
+  opacity: 0.1;
 }
 
 .result-type {
@@ -483,6 +517,8 @@ function printPage() {
   gap: 1rem;
   align-items: flex-start;
   margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .type-letter {
@@ -496,6 +532,11 @@ function printPage() {
   font-size: 2rem;
   font-weight: bold;
   flex-shrink: 0;
+}
+
+.type-details {
+  position: relative;
+  z-index: 1;
 }
 
 .type-details h2 {
@@ -513,6 +554,8 @@ function printPage() {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .trait-tag {
@@ -524,7 +567,7 @@ function printPage() {
   background: white;
 }
 
-/* Quadrant Diagram */
+/* Quadrant Diagram with watermarks */
 .quadrant-section {
   background: white;
   border-radius: 16px;
@@ -601,6 +644,23 @@ function printPage() {
   align-items: center;
   justify-content: center;
   padding: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.quadrant-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  height: 90%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.12;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .q-d { background: rgba(220, 53, 69, 0.15); }
@@ -612,6 +672,8 @@ function printPage() {
   font-size: 2.5rem;
   font-weight: bold;
   opacity: 0.4;
+  position: relative;
+  z-index: 1;
 }
 
 .q-d .q-letter { color: #dc3545; }
@@ -623,6 +685,8 @@ function printPage() {
   font-size: 0.7rem;
   text-transform: uppercase;
   color: #666;
+  position: relative;
+  z-index: 1;
 }
 
 .cross-h, .cross-v, .diag-1, .diag-2 {
@@ -637,6 +701,7 @@ function printPage() {
   top: 50%;
   height: 2px;
   transform: translateY(-50%);
+  z-index: 2;
 }
 
 .cross-v {
@@ -645,6 +710,7 @@ function printPage() {
   left: 50%;
   width: 2px;
   transform: translateX(-50%);
+  z-index: 2;
 }
 
 .diag-1, .diag-2 {
@@ -653,6 +719,7 @@ function printPage() {
   left: 50%;
   top: 50%;
   background: #ccc;
+  z-index: 1;
 }
 
 .diag-1 { transform: translate(-50%, -50%) rotate(45deg); }
@@ -807,23 +874,29 @@ function printPage() {
 .strengths { border-top: 3px solid #22c55e; }
 .challenges { border-top: 3px solid #f59e0b; }
 
-/* Secondary Section */
+/* Secondary Section with watermark */
 .secondary-section {
   background: white;
   border-radius: 12px;
   padding: 1.25rem;
   margin-bottom: 1.5rem;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  position: relative;
+  overflow: hidden;
 }
 
 .secondary-section h3 {
   margin: 0 0 0.5rem;
   font-size: 1.1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .secondary-section p {
   margin: 0;
   color: #666;
+  position: relative;
+  z-index: 1;
 }
 
 /* Detailed Analysis CTA Section */
@@ -1267,6 +1340,11 @@ function printPage() {
   .actions {
     flex-direction: column;
   }
+  
+  .watermark-bg {
+    width: 60%;
+    right: -15%;
+  }
 }
 
 @media print {
@@ -1276,6 +1354,10 @@ function printPage() {
   
   .actions {
     display: none;
+  }
+  
+  .watermark-bg {
+    opacity: 0.05;
   }
 }
 </style>
