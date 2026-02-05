@@ -5,14 +5,14 @@
 <template>
   <div class="container">
     <div class="hero">
-      <h1>DISG Persönlichkeitstest</h1>
+      <h1>Power4-people Kurzanalyse</h1>
       <p class="subtitle">
         Entdecken Sie Ihren Persönlichkeitstyp in nur 3 Minuten
       </p>
       
       <div class="start-card">
         <h2>Bereit zu starten?</h2>
-        <p>Beantworten Sie 10 kurze Fragen und erfahren Sie, welcher DISG-Typ Sie sind.</p>
+        <p>Beantworten Sie 10 kurze Fragen und erfahren Sie, welcher Persönlichkeitstyp Sie sind.</p>
         
         <NuxtLink to="/test" class="start-btn">
           Test starten →
@@ -22,31 +22,30 @@
       </div>
       
       <div class="info-section">
-        <h3>Was ist DISG?</h3>
+        <h3>Welche Persönlichkeitstypen gibt es?</h3>
         <p class="info-text">
-          Das DISG-Modell beschreibt vier grundlegende Persönlichkeitstypen, 
-          die Ihnen helfen, sich selbst und andere besser zu verstehen.
+          Es gibt unzählige Variationen. In der Kurzanalyse beschränken wir uns auf die 4 Hauptfarben, die Ihnen helfen
         </p>
         <div class="types-grid">
+          <div class="type-card type-g">
+            <span class="type-letter">Blau</span>
+            <span class="type-name">Gewissenhaft</span>
+            <span class="type-desc">Analytisch & Genau</span>
+          </div>
           <div class="type-card type-d">
-            <span class="type-letter">D</span>
+            <span class="type-letter">Rot</span>
             <span class="type-name">Dominant</span>
             <span class="type-desc">Ergebnisorientiert & Direkt</span>
           </div>
-          <div class="type-card type-i">
-            <span class="type-letter">I</span>
-            <span class="type-name">Initiativ</span>
-            <span class="type-desc">Enthusiastisch & Optimistisch</span>
-          </div>
           <div class="type-card type-s">
-            <span class="type-letter">S</span>
+            <span class="type-letter">Grün</span>
             <span class="type-name">Stetig</span>
             <span class="type-desc">Geduldig & Zuverlässig</span>
           </div>
-          <div class="type-card type-g">
-            <span class="type-letter">G</span>
-            <span class="type-name">Gewissenhaft</span>
-            <span class="type-desc">Analytisch & Genau</span>
+          <div class="type-card type-i">
+            <span class="type-letter">Gelb</span>
+            <span class="type-name">Initiativ</span>
+            <span class="type-desc">Enthusiastisch & Optimistisch</span>
           </div>
         </div>
       </div>
@@ -174,9 +173,10 @@ h1 {
 }
 
 .type-d { background: linear-gradient(135deg, #dc3545, #c82333); }
-.type-i { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.type-i { background: linear-gradient(135deg, #facc15, #eab308); }
 .type-s { background: linear-gradient(135deg, #22c55e, #16a34a); }
 .type-g { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+
 
 @media (max-width: 500px) {
   h1 {

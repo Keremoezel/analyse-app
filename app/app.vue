@@ -11,7 +11,7 @@ useSeoMeta({
     <nav class="topbar">
       <NuxtLink to="/" class="logo">
         <Icon name="heroicons:chart-pie-solid" class="logo-icon" />
-        <span class="logo-text">DISG Test</span>
+        <span class="logo-text">Power4-people Kurzanalys</span>
       </NuxtLink>
       
       <div class="nav-links">

@@ -172,7 +172,7 @@ function backToTest() {
         </div>
         
         <div class="instructions-content">
-          <h2>So funktioniert der DISG-Test:</h2>
+          <h2>So funktioniert die Kurzanalyse</h2>
           
           <div class="instruction-item">
             <span class="step-number">1</span>
@@ -199,7 +199,7 @@ function backToTest() {
           <div class="instruction-item">
             <span class="step-number">3</span>
             <div class="step-content">
-              <strong>Jede Punktzahl nur einmal pro Frage</strong>
+              <strong>Jede Punktzahl kann nur einmal bei einer Frage vergeben werden</strong>
               <p>Verteilen Sie alle vier Punkte (1, 2, 3, 4) auf die vier Begriffe – keine Doppelvergabe!</p>
             </div>
           </div>
@@ -216,7 +216,7 @@ function backToTest() {
             <span class="email-icon">📧</span>
             <div>
               <strong>E-Mail-Adresse erforderlich</strong>
-              <p>Nach Abschluss des Tests benötigen Sie eine E-Mail-Adresse, um Ihr persönliches DISG-Profil zu erhalten.</p>
+              <p>Nach Abschluss der Analyse bekommen Sie Sie Ihre Auswertung in wenigen Minuten per E-Mail.</p>
             </div>
           </div>
 

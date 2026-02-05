@@ -19,7 +19,7 @@ const { data: result, error } = await useFetch<ResultData>(`/api/results/${resul
 // DISG type descriptions
 const typeDescriptions = {
   D: {
-    name: 'Dominant',
+    name: 'Rot',
     color: '#dc3545',
     bgColor: '#fef2f2',
     icon: '🔥',
@@ -29,9 +29,9 @@ const typeDescriptions = {
     challenges: ['Ungeduld', 'Risikobereitschaft', 'Dominanz'],
   },
   I: {
-    name: 'Initiativ',
-    color: '#f59e0b',
-    bgColor: '#fffbeb',
+    name: 'Gelb',
+    color: '#facc15',
+    bgColor: '#fefce8',
     icon: '⭐',
     traits: ['Enthusiastisch', 'Optimistisch', 'Kontaktfreudig', 'Überzeugend', 'Kreativ'],
     description: 'Sie sind eine inspirierende Persönlichkeit, die Menschen begeistert und gerne im Mittelpunkt steht.',
@@ -39,7 +39,7 @@ const typeDescriptions = {
     challenges: ['Detailarbeit', 'Zeitmanagement', 'Fokus'],
   },
   S: {
-    name: 'Stetig',
+    name: 'Grün',
     color: '#22c55e',
     bgColor: '#f0fdf4',
     icon: '🌿',
@@ -49,7 +49,7 @@ const typeDescriptions = {
     challenges: ['Veränderungen', 'Konfrontation', 'Tempo'],
   },
   G: {
-    name: 'Gewissenhaft',
+    name: 'Blau',
     color: '#3b82f6',
     bgColor: '#eff6ff',
     icon: '🎯',
@@ -76,17 +76,17 @@ const quadrantPosition = computed(() => {
   if (!result.value) return { x: 50, y: 50 }
   const { D, I, S, G } = result.value.scores
   
-  // X axis: aufgabenorientiert (D+G) vs menschenorientiert (I+S)
-  // Left = aufgabenorientiert, Right = menschenorientiert
-  const taskOriented = D + G
-  const peopleOriented = I + S
-  const x = (peopleOriented / (taskOriented + peopleOriented)) * 100
-  
-  // Y axis: extrovertiert (D+I) vs introvertiert (S+G)
-  // Top = extrovertiert, Bottom = introvertiert
+  // X axis: Introvertiert (Blau+Grün) vs Extrovertiert (Rot+Gelb)
+  // Left = Introvertiert, Right = Extrovertiert
+  const introvert = G + S
   const extrovert = D + I
-  const introvert = S + G
-  const y = 100 - (extrovert / (extrovert + introvert)) * 100
+  const x = (extrovert / (introvert + extrovert)) * 100
+  
+  // Y axis: Kopfmensch (Blau+Rot) vs Bauchmensch (Grün+Gelb)
+  // Top = Kopfmensch, Bottom = Bauchmensch
+  const kopfmensch = G + D
+  const bauchmensch = S + I
+  const y = 100 - (kopfmensch / (kopfmensch + bauchmensch)) * 100
   
   return { x, y }
 })
@@ -98,6 +98,63 @@ const secondaryType = computed(() => {
   const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1])
   return sorted[1]?.[0] as keyof typeof typeDescriptions ?? null
 })
+
+// Contact form modal
+const showContactModal = ref(false)
+const contactForm = ref({
+  name: '',
+  email: '',
+  phone: '',
+  message: ''
+})
+const isSubmittingContact = ref(false)
+const contactError = ref('')
+const contactSuccess = ref(false)
+
+function openContactModal() {
+  showContactModal.value = true
+  contactSuccess.value = false
+  contactError.value = ''
+}
+
+function closeContactModal() {
+  showContactModal.value = false
+  contactForm.value = { name: '', email: '', phone: '', message: '' }
+  contactError.value = ''
+  contactSuccess.value = false
+}
+
+async function submitContactForm() {
+  if (isSubmittingContact.value) return
+  
+  // Basic validation
+  if (!contactForm.value.name || !contactForm.value.email || !contactForm.value.message) {
+    contactError.value = 'Bitte füllen Sie alle Pflichtfelder aus'
+    return
+  }
+  
+  if (!contactForm.value.email.includes('@')) {
+    contactError.value = 'Bitte geben Sie eine gültige E-Mail-Adresse ein'
+    return
+  }
+  
+  isSubmittingContact.value = true
+  contactError.value = ''
+  
+  try {
+    // TODO: Add your contact form API endpoint here
+    await new Promise(resolve => setTimeout(resolve, 1000)) // Simulated API call
+    
+    contactSuccess.value = true
+    setTimeout(() => {
+      closeContactModal()
+    }, 2000)
+  } catch (e: any) {
+    contactError.value = e.message || 'Ein Fehler ist aufgetreten'
+  } finally {
+    isSubmittingContact.value = false
+  }
+}
 
 function printPage() {
   if (import.meta.client) {
@@ -152,30 +209,30 @@ function printPage() {
         <h3>Ihr Persönlichkeitsprofil</h3>
         <div class="quadrant-wrapper">
           <!-- Top label -->
-          <div class="axis-label axis-top">extrovertiert</div>
+          <div class="axis-label axis-top">Kopfmensch</div>
           
           <div class="quadrant-row">
             <!-- Left label -->
-            <div class="axis-label axis-left">aufgabenorientiert</div>
+            <div class="axis-label axis-left">Introvertiert</div>
             
             <!-- Main quadrant grid -->
             <div class="quadrant-grid">
-              <!-- Quadrant boxes - D top-left, I top-right, G bottom-left, S bottom-right -->
-              <div class="quadrant q-d">
-                <span class="q-letter">D</span>
-                <span class="q-name">dominant</span>
-              </div>
-              <div class="quadrant q-i">
-                <span class="q-letter">I</span>
-                <span class="q-name">initiativ</span>
-              </div>
+              <!-- Quadrant boxes - G (Blau) top-left, D (Rot) top-right, S (Grün) bottom-left, I (Gelb) bottom-right -->
               <div class="quadrant q-g">
                 <span class="q-letter">G</span>
                 <span class="q-name">gewissenhaft</span>
               </div>
+              <div class="quadrant q-d">
+                <span class="q-letter">D</span>
+                <span class="q-name">dominant</span>
+              </div>
               <div class="quadrant q-s">
                 <span class="q-letter">S</span>
                 <span class="q-name">stetig</span>
+              </div>
+              <div class="quadrant q-i">
+                <span class="q-letter">I</span>
+                <span class="q-name">initiativ</span>
               </div>
               
               <!-- Position marker -->
@@ -198,11 +255,11 @@ function printPage() {
             </div>
             
             <!-- Right label -->
-            <div class="axis-label axis-right">menschenorientiert</div>
+            <div class="axis-label axis-right">Extrovertiert</div>
           </div>
           
           <!-- Bottom label -->
-          <div class="axis-label axis-bottom">introvertiert</div>
+          <div class="axis-label axis-bottom">Bauchmensch</div>
         </div>
       </div>
 
@@ -258,15 +315,93 @@ function printPage() {
       </div>
 
       <!-- Secondary Type -->
-      <div v-if="secondaryType" class="secondary-section">
-        <h3>Ihr Sekundärtyp: {{ typeDescriptions[secondaryType].name }}</h3>
+      <div v-if="secondaryType" class="secondary-section" :style="{ background: typeDescriptions[secondaryType].bgColor }">
+        <h3>Ihre SekundärFarbe: {{ typeDescriptions[secondaryType].name }}</h3>
         <p>{{ typeDescriptions[secondaryType].description }}</p>
       </div>
 
-      <!-- Actions -->
-      <div class="actions">
-        <NuxtLink to="/" class="action-btn primary">Neuen Test starten</NuxtLink>
-        <button @click="printPage" class="action-btn secondary">📄 Drucken</button>
+      <!-- Detailed Analysis CTA -->
+      <div class="detailed-analysis-section">
+        <h3>🎯 Möchten Sie mehr erfahren?</h3>
+        <p class="analysis-description">
+          Wenn Sie eine detaillierte Analyse interessiert, Sie Handlungsempfehlungen haben möchten, Ihnen Ihre Motivatoren wichtig sind und Sie Spaß an Informationen zu Ihrem IQ haben, dann schauen Sie sich doch mal beigefügte Musterauswertung an.
+        </p>
+        
+        <div class="cta-buttons">
+          <a href="#" class="cta-btn sample-btn" target="_blank">
+            📄 Musterauswertung ansehen
+          </a>
+          <button @click="openContactModal" class="cta-btn contact-btn">
+            So eine Auswertung möchte ich auch haben
+          </button>
+        </div>
+      </div>
+
+      <!-- Contact Form Modal -->
+      <div v-if="showContactModal" class="modal-overlay" @click="closeContactModal">
+        <div class="modal-content" @click.stop>
+          <button class="modal-close" @click="closeContactModal">✕</button>
+          
+          <div class="modal-header">
+            <h3>📬 Kontaktformular</h3>
+            <p>Füllen Sie das Formular aus und wir melden uns bei Ihnen!</p>
+          </div>
+          
+          <form @submit.prevent="submitContactForm" class="contact-form">
+            <div class="form-group">
+              <label for="contact-name">Name *</label>
+              <input 
+                id="contact-name"
+                v-model="contactForm.name" 
+                type="text" 
+                placeholder="Ihr vollständiger Name"
+                required
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="contact-email">E-Mail *</label>
+              <input 
+                id="contact-email"
+                v-model="contactForm.email" 
+                type="email" 
+                placeholder="ihre.email@beispiel.de"
+                required
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="contact-phone">Telefon (optional)</label>
+              <input 
+                id="contact-phone"
+                v-model="contactForm.phone" 
+                type="tel" 
+                placeholder="+49 123 456789"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="contact-message">Nachricht *</label>
+              <textarea 
+                id="contact-message"
+                v-model="contactForm.message" 
+                rows="4"
+                placeholder="Teilen Sie uns mit, wie wir Ihnen helfen können..."
+                required
+              ></textarea>
+            </div>
+            
+            <p v-if="contactError" class="error-message">{{ contactError }}</p>
+            <p v-if="contactSuccess" class="success-message">✓ Vielen Dank! Wir melden uns bald bei Ihnen.</p>
+            
+            <div class="form-actions">
+              <button type="button" @click="closeContactModal" class="btn-cancel">Abbrechen</button>
+              <button type="submit" :disabled="isSubmittingContact" class="btn-submit">
+                {{ isSubmittingContact ? 'Wird gesendet...' : 'Absenden' }}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
 
       <!-- Template Preview Section -->
@@ -408,7 +543,7 @@ function printPage() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
   max-width: 450px;
   margin: 0 auto;
 }
@@ -416,7 +551,8 @@ function printPage() {
 .quadrant-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.25rem;
   width: 100%;
 }
 
@@ -431,12 +567,17 @@ function printPage() {
 
 .axis-top, .axis-bottom {
   padding: 0.5rem;
+  width: 300px;
 }
 
 .axis-left, .axis-right {
   writing-mode: vertical-rl;
   text-orientation: mixed;
   padding: 0.5rem;
+  min-width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .axis-left {
@@ -463,7 +604,7 @@ function printPage() {
 }
 
 .q-d { background: rgba(220, 53, 69, 0.15); }
-.q-i { background: rgba(245, 158, 11, 0.15); }
+.q-i { background: rgba(250, 204, 21, 0.15); }
 .q-g { background: rgba(59, 130, 246, 0.15); }
 .q-s { background: rgba(34, 197, 94, 0.15); }
 
@@ -474,7 +615,7 @@ function printPage() {
 }
 
 .q-d .q-letter { color: #dc3545; }
-.q-i .q-letter { color: #f59e0b; }
+.q-i .q-letter { color: #facc15; }
 .q-g .q-letter { color: #3b82f6; }
 .q-s .q-letter { color: #22c55e; }
 
@@ -683,6 +824,288 @@ function printPage() {
 .secondary-section p {
   margin: 0;
   color: #666;
+}
+
+/* Detailed Analysis CTA Section */
+.detailed-analysis-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 2px solid #dee2e6;
+}
+
+.detailed-analysis-section h3 {
+  color: #1a1a2e;
+  margin: 0 0 1rem;
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.analysis-description {
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.cta-btn {
+  flex: 1;
+  min-width: 250px;
+  max-width: 350px;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: inline-block;
+}
+
+.sample-btn {
+  background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
+  color: white;
+  border: 2px solid #357abd;
+}
+
+.sample-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(74, 144, 217, 0.3);
+  background: linear-gradient(135deg, #357abd 0%, #2868a8 100%);
+}
+
+.contact-btn {
+  background: linear-gradient(135deg, #28a745 0%, #20963d 100%);
+  color: white;
+  border: 2px solid #20963d;
+}
+
+.contact-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(40, 167, 69, 0.3);
+  background: linear-gradient(135deg, #20963d 0%, #1e7e34 100%);
+}
+
+.cta-note {
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin: 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.cta-note strong {
+  color: #495057;
+}
+
+/* Contact Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.modal-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  color: #1a1a2e;
+}
+
+.modal-header p {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #4a90d9;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 0.9rem;
+  margin: 0;
+  padding: 0.5rem;
+  background: #fef2f2;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.success-message {
+  color: #28a745;
+  font-size: 0.9rem;
+  margin: 0;
+  padding: 0.5rem;
+  background: #f0fdf4;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.btn-cancel,
+.btn-submit {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-cancel {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn-cancel:hover {
+  background: #e0e0e0;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #28a745 0%, #20963d 100%);
+  color: white;
+}
+
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 500px) {
+  .modal-content {
+    padding: 1.5rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
 }
 
 /* Actions */
