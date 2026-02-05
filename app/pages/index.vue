@@ -5,10 +5,12 @@
 <template>
   <div class="container">
     <div class="hero">
-      <h1>Power4-people Kurzanalyse</h1>
-      <p class="subtitle">
-        Entdecken Sie Ihren Persönlichkeitstyp in nur 3 Minuten
-      </p>
+      <div class="header-container">
+        <h1>Power4-people Kurzanalyse</h1>
+        <p class="subtitle">
+          Entdecken Sie Ihren Persönlichkeitstyp in nur 3 Minuten
+        </p>
+      </div>
       
       <div class="info-section">
         <h3>Welche Persönlichkeitstypen gibt es?</h3>
@@ -95,16 +97,39 @@
   text-align: center;
 }
 
+.header-container {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.header-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b);
+  border-radius: 20px 20px 0 0;
+}
+
 h1 {
   font-size: 2rem;
   color: #1a1a2e;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .subtitle {
-  color: #666;
-  font-size: 1rem;
-  margin-bottom: 1rem;
+  color: #475569;
+  font-size: 1.05rem;
+  margin-bottom: 0;
+  line-height: 1.5;
 }
 
 .start-card {
@@ -298,6 +323,15 @@ h1 {
 @media (max-width: 768px) {
   h1 {
     font-size: 1.8rem;
+  }
+  
+  .header-container {
+    padding: 1.5rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .subtitle {
+    font-size: 0.95rem;
   }
   
   .types-grid {
