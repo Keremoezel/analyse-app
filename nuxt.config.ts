@@ -60,7 +60,7 @@ export default defineNuxtConfig({
 
     // Public (exposed to client)
     public: {
-      // client side keys
+      testCheatcode: '', // Overridden by NUXT_PUBLIC_TEST_CHEATCODE in .env
     }
   },
 })

@@ -20,7 +20,7 @@ export async function generatePdf(html: string): Promise<Buffer> {
             ? {
                 args: chromium.args,
                 defaultViewport: (chromium as any).defaultViewport,
-                executablePath: await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v143.0.0/chromium-v143.0.0-pack.tar'),
+                executablePath: await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v143.0.4/chromium-v143.0.4-pack.x64.tar'),
                 headless: (chromium as any).headless as any,
                 ignoreHTTPSErrors: true,
             }
