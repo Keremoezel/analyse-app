@@ -11,7 +11,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'DISG Persönlichkeitstest',
+      title: 'power4-people Kurzanalyse',
       htmlAttrs: {
         lang: 'de',
       },
@@ -57,10 +57,11 @@ export default defineNuxtConfig({
     emailFromSupport: process.env.EMAIL_FROM_SUPPORT || '',
     emailApiKey: process.env.EMAIL_API_KEY || '',
     emailAdminRecipient: process.env.EMAIL_ADMIN_RECIPIENT || '',
+    testCheatcode: process.env.TEST_CHEATCODE || '',
 
     // Public (exposed to client)
     public: {
-      testCheatcode: '', // Overridden by NUXT_PUBLIC_TEST_CHEATCODE in .env
+      testCheatcode: '',
     }
   },
 })

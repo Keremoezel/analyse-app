@@ -146,7 +146,7 @@ async function submitContactForm() {
   if (isSubmittingContact.value) return
   
   // Basic validation
-  if (!contactForm.value.name || !contactForm.value.email || !contactForm.value.message) {
+  if (!contactForm.value.name || !contactForm.value.email) {
     contactError.value = 'Bitte füllen Sie alle Pflichtfelder aus'
     return
   }
@@ -443,13 +443,12 @@ function printPage() {
             </div> 
             
             <div class="form-group">
-              <label for="contact-message">Nachricht *</label>
+              <label for="contact-message">Nachricht (optional)</label>
               <textarea 
                 id="contact-message"
                 v-model="contactForm.message" 
                 rows="4"
                 placeholder="Was interessiert Sie am meisten"
-                required
               ></textarea>
             </div>
             
@@ -1475,5 +1474,29 @@ function printPage() {
   .watermark-bg {
     opacity: 0.05;
   }
+}
+/* Fix autofill styles */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: #333;
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Custom checkbox styling */
+input[type="checkbox"] {
+  accent-color: #22c55e; /* Green accent */
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Ensure label text is readable */
+.privacy-label span {
+  color: #333;
 }
 </style>

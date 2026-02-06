@@ -56,28 +56,33 @@ const config = useRuntimeConfig()
 onMounted(() => {
   // Define cheatcode for dev/testing
   // Usage: F12 -> Console -> cheat('your-code')
-  (window as any).cheat = (code: string) => {
-    if (code !== config.public.testCheatcode) {
-      console.error('Ungültiger Cheatcode. Erwartet wurde:', config.public.testCheatcode)
-      return
-    }
-
-    if (!questions.value) return
-
-    // Fill all answers randomly but correctly (1-4 per row)
-    questions.value.forEach(row => {
-      const scores = [1, 2, 3, 4].sort(() => Math.random() - 0.5)
-      row.adjectives.forEach((adj, idx) => {
-        const score = scores[idx]
-        if (score !== undefined) {
-          answers.value[adj.word] = score
-        }
+  (window as any).cheat = async (code: string) => {
+    try {
+      console.log('Validiere Cheatcode...')
+      await $fetch('/api/auth/verify-cheat', {
+        method: 'POST',
+        body: { code }
       })
-    })
 
-    console.log('Test automatisch ausgefüllt! 🎉')
-    if (!testStarted.value) startTest()
-    completeTest()
+      if (!questions.value) return
+
+      // Fill all answers randomly but correctly (1-4 per row)
+      questions.value.forEach(row => {
+        const scores = [1, 2, 3, 4].sort(() => Math.random() - 0.5)
+        row.adjectives.forEach((adj, idx) => {
+          const score = scores[idx]
+          if (score !== undefined) {
+            answers.value[adj.word] = score
+          }
+        })
+      })
+
+      console.log('Test automatisch ausgefüllt! 🎉')
+      if (!testStarted.value) startTest()
+      completeTest()
+    } catch (e) {
+      console.error('Ungültiger Cheatcode oder Serverfehler')
+    }
   }
 })
 
@@ -390,7 +395,7 @@ function backToTest() {
     <!-- Test Content -->
     <div v-else>
       <header class="test-header">
-        <h1>DISG Persönlichkeitstest</h1>
+        <h1>power4-people Kurzanalyse</h1>
         <div class="timer" :class="{ warning: timeLeft < 60 }">
           ⏱️ {{ timeDisplay }}
         </div>

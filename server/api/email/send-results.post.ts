@@ -94,7 +94,7 @@ export default defineEventHandler(async (event) => {
 <head>
     <meta charset="utf-8">
 </head>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px;">
+<body style="font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px;">
     <p>Hallo ${name},</p>
     
     <p>vielen Dank für Ihre Teilnahme am DISG Persönlichkeitstest.</p>

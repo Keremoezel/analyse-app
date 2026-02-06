@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: 'DISG Persönlichkeitstest',
+  title: 'power4-people Kurzanalyse',
   description: 'Entdecken Sie Ihren DISG Persönlichkeitstyp',
 })
 </script>
