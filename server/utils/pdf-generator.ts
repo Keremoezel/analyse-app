@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer-core'
-import chromium from '@sparticuz/chromium'
+import chromium from '@sparticuz/chromium-min'
 import { existsSync } from 'node:fs'
 
 // Extend window object to include print function if needed
@@ -18,10 +18,10 @@ export async function generatePdf(html: string): Promise<Buffer> {
         // Browser options
         const options = isProduction
             ? {
-                args: (chromium as any).args,
+                args: chromium.args,
                 defaultViewport: (chromium as any).defaultViewport,
-                executablePath: await chromium.executablePath(),
-                headless: (chromium as any).headless,
+                executablePath: await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v143.0.0/chromium-v143.0.0-pack.tar'),
+                headless: (chromium as any).headless as any,
                 ignoreHTTPSErrors: true,
             }
             : {

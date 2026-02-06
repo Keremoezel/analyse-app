@@ -128,18 +128,18 @@ export default defineEventHandler(async (event) => {
         slug: slug,
     }).returning()
 
-    // Send results email asynchronously (don't block response)
-    // This runs in the background and won't delay the user
-    $fetch('/api/email/send-results', {
-        method: 'POST',
-        body: {
-            resultId: slug,
-            email: body.email,
-        },
-    }).catch((error) => {
-        // Log error but don't fail the request
+    // Send results email and await completion (required for Vercel Serverless)
+    try {
+        await $fetch('/api/email/send-results', {
+            method: 'POST',
+            body: {
+                resultId: slug,
+                email: body.email,
+            },
+        })
+    } catch (error) {
         console.error('Failed to send results email:', error)
-    })
+    }
 
     return {
         success: true,

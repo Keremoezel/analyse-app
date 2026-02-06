@@ -16,7 +16,7 @@
     "@libsql/client": "^0.15.15",
     "@nuxt/eslint": "^1.12.1",
     "@nuxt/ui": "^4.4.0",
-    "@sparticuz/chromium": "^143.0.4",
+    "@sparticuz/chromium-min": "^143.0.4",
     "@tiptap/extension-emoji": "^3.17.1",
     "@upstash/redis": "^1.35.7",
     "@vercel/blob": "^2.0.1",
