@@ -16,6 +16,7 @@
     "@libsql/client": "^0.15.15",
     "@nuxt/eslint": "^1.12.1",
     "@nuxt/ui": "^4.4.0",
+    "@sparticuz/chromium": "^143.0.4",
     "@tiptap/extension-emoji": "^3.17.1",
     "@upstash/redis": "^1.35.7",
     "@vercel/blob": "^2.0.1",
@@ -24,12 +25,17 @@
     "better-sqlite3": "^12.6.2",
     "drizzle-kit": "^0.31.8",
     "drizzle-orm": "^0.45.1",
-    "nuxt": "^4.2.2"
+    "jimp": "^1.6.0",
+    "nuxt": "^4.2.2",
+    "puppeteer-core": "^24.37.2",
+    "resend": "^6.9.1",
+    "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^1.12.1",
     "@types/better-sqlite3": "^7.6.13",
     "eslint": "^9.39.1",
+    "puppeteer": "^24.37.2",
     "vue-tsc": "^3.1.8",
     "wrangler": "4.54.0"
   },

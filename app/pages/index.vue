@@ -6,7 +6,7 @@
   <div class="container">
     <div class="hero">
       <div class="header-container">
-        <h1>Power4-people Kurzanalyse</h1>
+        <h1>power4-people Kurzanalyse</h1>
         <p class="subtitle">
           Entdecken Sie Ihren Persönlichkeitstyp in nur 3 Minuten
         </p>
@@ -14,61 +14,54 @@
       
       <div class="info-section">
         <h3>Welche Persönlichkeitstypen gibt es?</h3>
-        <p class="info-text">
-          Es gibt unzählige Variationen. In der Kurzanalyse beschränken wir uns auf die 4 Hauptfarben, die Ihnen helfen
-        </p>
         <div class="types-grid">
-          <div class="type-card type-g">
+          <UCard class="type-card type-g" :ui="{ root: 'bg-transparent ring-0 shadow-none', body: '!p-0' }">
             <div class="card-inner">
               <div class="image-bg">
-                <img src="/peoplebluehomepag.png" alt="Blau" class="type-image">
+                <img src="/images/characters/char-blue.png" alt="Blau" class="type-image">
               </div>
               <div class="type-content">
                 <h4 class="type-title">Blau</h4>
-                <p class="type-trait">Analytisch & Präzise</p>
               </div>
             </div>
             <div class="card-shine"></div>
-          </div>
+          </UCard>
           
-          <div class="type-card type-d">
+          <UCard class="type-card type-d" :ui="{ root: 'bg-transparent ring-0 shadow-none', body: '!p-0' }">
             <div class="card-inner">
               <div class="image-bg">
-                <img src="/peopleredhomepag.png" alt="Rot" class="type-image">
+                <img src="/images/characters/char-red-active.png" alt="Rot" class="type-image">
               </div>
               <div class="type-content">
                 <h4 class="type-title">Rot</h4>
-                <p class="type-trait">Dominant & Zielstrebig</p>
               </div>
             </div>
             <div class="card-shine"></div>
-          </div>
+          </UCard>
           
-          <div class="type-card type-s">
+          <UCard class="type-card type-s" :ui="{ root: 'bg-transparent ring-0 shadow-none', body: '!p-0' }">
             <div class="card-inner">
               <div class="image-bg">
-                <img src="/peoplegreenhomepag.png" alt="Grün" class="type-image">
+                <img src="/images/characters/char-green-active.png" alt="Grün" class="type-image">
               </div>
               <div class="type-content">
                 <h4 class="type-title">Grün</h4>
-                <p class="type-trait">Harmonisch & Geduldig</p>
               </div>
             </div>
             <div class="card-shine"></div>
-          </div>
+          </UCard>
           
-          <div class="type-card type-i">
+          <UCard class="type-card type-i" :ui="{ root: 'bg-transparent ring-0 shadow-none', body: '!p-0' }">
             <div class="card-inner">
               <div class="image-bg">
-                <img src="/peopleyellowhomepage.png" alt="Gelb" class="type-image">
+                <img srcset="/images/characters/char-yellow-active.png 1x" alt="Gelb" class="type-image">
               </div>
               <div class="type-content">
                 <h4 class="type-title">Gelb</h4>
-                <p class="type-trait">Enthusiastisch & Sozial</p>
               </div>
             </div>
             <div class="card-shine"></div>
-          </div>
+          </UCard>
         </div>
       </div>
       
@@ -77,7 +70,7 @@
         <p>Beantworten Sie 10 kurze Fragen und erfahren Sie, welcher Persönlichkeitstyp Sie sind.</p>
         
         <NuxtLink to="/test" class="start-btn">
-          Test starten →
+          Analyse starten →
         </NuxtLink>
         
         <p class="note">Kostenlos • 3 Minuten • Sofortige Ergebnisse</p>
@@ -221,7 +214,7 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   min-height: 180px;
   justify-content: center;
   position: relative;
@@ -249,29 +242,34 @@ h1 {
 }
 
 .image-bg {
-  background: rgba(255, 255, 255, 0.95);
+  background: transparent;
   border-radius: 12px;
-  padding: 8px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 140px;
-  aspect-ratio: 0.8;
+  max-width: 100%;
+  height: 150px;
   transition: all 0.3s;
+  overflow: hidden;
 }
 
 .type-card:hover .image-bg {
   transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .type-image {
-  width: 100%;
+  width: 60%;
   height: 100%;
-  object-fit: contain;
+  object-position: center;
   transition: transform 0.3s;
+  mix-blend-mode: darken;
+  filter: contrast(1.1);
+   image-rendering: auto;
+  image-rendering: smooth;
+  image-rendering: high-quality;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .type-card:hover .type-image {
@@ -284,21 +282,13 @@ h1 {
 }
 
 .type-title {
-  font-size: 1.1rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: white;
-  margin: 0 0 0.25rem 0;
+  margin: 0;
   text-transform: capitalize;
   letter-spacing: 0.5px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.type-trait {
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.95);
-  margin: 0;
-  font-weight: 500;
-  letter-spacing: 0.3px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 /* Color-specific gradients with more depth */
@@ -309,8 +299,6 @@ h1 {
 .type-i { 
   background: linear-gradient(135deg, #fde047 0%, #facc15 50%, #eab308 100%);
 }
-
-
 
 .type-s { 
   background: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%);
@@ -342,6 +330,10 @@ h1 {
   .card-inner {
     min-height: 160px;
   }
+  
+  .image-bg {
+    height: 100px;
+  }
 }
 
 @media (max-width: 500px) {
@@ -351,11 +343,11 @@ h1 {
   }
   
   .card-inner {
-    min-height: 200px;
+    min-height: 180px;
   }
   
   .image-bg {
-    max-width: 160px;
+    height: 130px;
   }
 }
 </style>

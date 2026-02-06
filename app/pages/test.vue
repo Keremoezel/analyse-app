@@ -188,10 +188,10 @@ function backToTest() {
               <strong>Punkte von 1 bis 4 vergeben</strong>
               <p>Bewerten Sie, wie gut jeder Begriff zu Ihnen passt:</p>
               <ul class="score-explanation">
-                <li><span class="score-badge">4</span> = Passt am besten zu mir</li>
-                <li><span class="score-badge">3</span> = Passt gut zu mir</li>
-                <li><span class="score-badge">2</span> = Passt weniger zu mir</li>
-                <li><span class="score-badge">1</span> = Passt am wenigsten zu mir</li>
+                <li><span class="score-badge">4</span> Punkte = Passt am besten zu mir</li>
+                <li><span class="score-badge">3</span> Punkte = Passt gut zu mir</li>
+                <li><span class="score-badge">2</span> Punkte = Passt weniger zu mir</li>
+                <li><span class="score-badge">1</span> Punkte = Passt am wenigsten zu mir</li>
               </ul>
             </div>
           </div>
@@ -241,7 +241,7 @@ function backToTest() {
         <div class="email-header">
           <span class="check-icon">✅</span>
           <h2>Test abgeschlossen!</h2>
-          <p>Geben Sie Ihre E-Mail-Adresse ein, um Ihr persönliches DISG-Profil zu erhalten.</p>
+          <p>Geben Sie Ihre E-Mail-Adresse ein, um Ihr persönliche Analyse zu erhalten.</p>
         </div>
         
         <form @submit.prevent="submitTest" class="email-form">

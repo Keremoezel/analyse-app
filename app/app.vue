@@ -11,11 +11,13 @@ useSeoMeta({
     <nav class="topbar">
       <NuxtLink to="/" class="logo">
         <Icon name="heroicons:chart-pie-solid" class="logo-icon" />
-        <span class="logo-text">Power4-people Kurzanalyse</span>
+        <span class="logo-text">power4-people Kurzanalyse</span>
       </NuxtLink>
       
       <div class="nav-links">
         <NuxtLink to="/" class="nav-link">Home</NuxtLink>
+        <NuxtLink to="/datenschutz" class="nav-link">Datenschutz</NuxtLink>
+        <NuxtLink to="/impressum" class="nav-link">Impressum</NuxtLink>
         <NuxtLink to="/admin" class="nav-link admin-link">
           <Icon name="heroicons:lock-closed" size="16" />
           Admin

@@ -14,6 +14,9 @@ interface ResultData {
   createdAt: string
 }
 
+const contactMethods = ['Anruf', 'Email']
+const selectedMethod = ref('Email') // Default to Email
+
 const { data: result, error } = await useFetch<ResultData>(`/api/results/${resultId}`)
 
 // DISG type descriptions
@@ -109,7 +112,10 @@ const contactForm = ref({
   name: '',
   email: '',
   phone: '',
-  message: ''
+  availability: '',
+  message: '',
+  privacyAccepted: false,
+  sendCopy: false
 })
 const isSubmittingContact = ref(false)
 const contactError = ref('')
@@ -123,7 +129,15 @@ function openContactModal() {
 
 function closeContactModal() {
   showContactModal.value = false
-  contactForm.value = { name: '', email: '', phone: '', message: '' }
+  contactForm.value = { 
+    name: '', 
+    email: '', 
+    phone: '', 
+    availability: '', 
+    message: '',
+    privacyAccepted: false,
+    sendCopy: false
+  }
   contactError.value = ''
   contactSuccess.value = false
 }
@@ -141,20 +155,34 @@ async function submitContactForm() {
     contactError.value = 'Bitte geben Sie eine gültige E-Mail-Adresse ein'
     return
   }
+
+  if (!contactForm.value.privacyAccepted) {
+    contactError.value = 'Bitte akzeptieren Sie die Datenschutzerklärung'
+    return
+  }
   
   isSubmittingContact.value = true
-  contactError.value = ''
   
   try {
-    // TODO: Add your contact form API endpoint here
-    await new Promise(resolve => setTimeout(resolve, 1000)) // Simulated API call
+    // Call contact email API
+    await $fetch('/api/email/send-contact', {
+      method: 'POST',
+      body: {
+        name: contactForm.value.name,
+        email: contactForm.value.email,
+        phone: contactForm.value.phone,
+        availability: selectedMethod.value === 'Anruf' ? contactForm.value.availability : undefined,
+        message: contactForm.value.message,
+        sendCopy: contactForm.value.sendCopy
+      },
+    })
     
     contactSuccess.value = true
     setTimeout(() => {
       closeContactModal()
     }, 2000)
   } catch (e: any) {
-    contactError.value = e.message || 'Ein Fehler ist aufgetreten'
+    contactError.value = e.data?.message || 'Ein Fehler ist aufgetreten'
   } finally {
     isSubmittingContact.value = false
   }
@@ -181,7 +209,7 @@ function printPage() {
         <div class="header-badge" :style="{ background: typeDescriptions[dominantType].color }">
           {{ typeDescriptions[dominantType].icon }}
         </div>
-        <h1>Ihr DISG-Profil</h1>
+        <h1>Ihr Analyse-Profil</h1>
         <p class="subtitle">Persönlichkeitsanalyse für {{ result.email }}</p>
       </header>
 
@@ -226,22 +254,18 @@ function printPage() {
               <!-- Quadrant boxes with watermark backgrounds -->
               <div class="quadrant q-g">
                 <div class="quadrant-watermark" style="background-image: url('/bluepeople.png')"></div>
-                <span class="q-letter">B</span>
                 <span class="q-name">gewissenhaft</span>
               </div>
               <div class="quadrant q-d">
                 <div class="quadrant-watermark" style="background-image: url('/reedpeople.png')"></div>
-                <span class="q-letter">R</span>
                 <span class="q-name">dominant</span>
               </div>
               <div class="quadrant q-s">
                 <div class="quadrant-watermark" style="background-image: url('/greenpeople.png')"></div>
-                <span class="q-letter">G</span>
                 <span class="q-name">stetig</span>
               </div>
               <div class="quadrant q-i">
                 <div class="quadrant-watermark" style="background-image: url('/yellowpeople.png')"></div>
-                <span class="q-letter">Y</span>
                 <span class="q-name">initiativ</span>
               </div>
               
@@ -256,12 +280,6 @@ function printPage() {
               >
                 <span class="marker-pulse"></span>
               </div>
-              
-              <!-- Cross lines -->
-              <div class="cross-h"></div>
-              <div class="cross-v"></div>
-              <div class="diag-1"></div>
-              <div class="diag-2"></div>
             </div>
             
             <!-- Right label -->
@@ -275,7 +293,7 @@ function printPage() {
 
       <!-- Score Bars -->
       <div class="scores-section">
-        <h3>Ihre Punktverteilung</h3>
+        <h3>Ihre Stärkenprofil</h3>
         <div class="scores-grid">
           <div 
             v-for="(info, type) in typeDescriptions" 
@@ -284,7 +302,7 @@ function printPage() {
             :class="{ dominant: type === dominantType }"
           >
             <div class="score-info">
-              <span class="score-icon" :style="{ background: info.color }">{{ type }}</span>
+              <span class="score-icon" :style="{ background: info.color }"></span>
               <span class="score-name">{{ info.name }}</span>
             </div>
             <div class="score-bar-wrap">
@@ -301,7 +319,6 @@ function printPage() {
             </div>
           </div>
         </div>
-        <p class="checksum">Gesamtpunktzahl: {{ result.scores.D + result.scores.I + result.scores.S + result.scores.G }}</p>
       </div>
 
       <!-- Strengths & Challenges -->
@@ -343,7 +360,7 @@ function printPage() {
             📄 Musterauswertung ansehen
           </a>
           <button @click="openContactModal" class="cta-btn contact-btn">
-            So eine Auswertung möchte ich auch haben
+            ℹ️ Ich will weitere Informationen
           </button>
         </div>
       </div>
@@ -391,13 +408,47 @@ function printPage() {
               >
             </div>
             
+             <div class="form-group"> 
+                <label>Wie möchten sie kontaktiert werden? </label>
+                <div class="radio-options">
+                  <label class="radio-label">
+                    <input 
+                      type="radio" 
+                      name="contactMethod" 
+                      value="Email" 
+                      v-model="selectedMethod"
+                    >
+                    Email
+                  </label>
+                  <label class="radio-label">
+                    <input 
+                      type="radio" 
+                      name="contactMethod" 
+                      value="Anruf" 
+                      v-model="selectedMethod"
+                    >
+                    Anruf
+                  </label>
+                </div>
+              </div>
+
+            <div v-if="selectedMethod === 'Anruf'" class="form-group slide-down">
+              <label for="contact-availability">Wann sind Sie am besten zu erreichen?</label>
+              <input 
+                id="contact-availability"
+                v-model="contactForm.availability" 
+                type="text" 
+                placeholder="z.B. Wochentags 14-16 Uhr"
+              >
+            </div> 
+            
             <div class="form-group">
               <label for="contact-message">Nachricht *</label>
               <textarea 
                 id="contact-message"
                 v-model="contactForm.message" 
                 rows="4"
-                placeholder="Teilen Sie uns mit, wie wir Ihnen helfen können..."
+                placeholder="Was interessiert Sie am meisten"
                 required
               ></textarea>
             </div>
@@ -405,6 +456,24 @@ function printPage() {
             <p v-if="contactError" class="error-message">{{ contactError }}</p>
             <p v-if="contactSuccess" class="success-message">✓ Vielen Dank! Wir melden uns bald bei Ihnen.</p>
             
+            <div class="form-group">
+               <label class="privacy-label">
+                  <input type="checkbox" v-model="contactForm.sendCopy">
+                  <span>
+                    Ich möchte eine Kopie meiner Anfrage als PDF per E-Mail erhalten.
+                  </span>
+               </label>
+            </div>
+
+            <div class="form-group">
+               <label class="privacy-label">
+                  <input type="checkbox" v-model="contactForm.privacyAccepted" required>
+                  <span>
+                    Ich habe die <NuxtLink to="/datenschutz" target="_blank" class="text-link">Datenschutzerklärung</NuxtLink> gelesen und akzeptiere sie.
+                  </span>
+               </label>
+            </div>
+
             <div class="form-actions">
               <button type="button" @click="closeContactModal" class="btn-cancel">Abbrechen</button>
               <button type="submit" :disabled="isSubmittingContact" class="btn-submit">
@@ -424,7 +493,15 @@ function printPage() {
             <span class="btn-icon">📄</span>
             <span class="btn-text">
               <strong>PDF-Report ansehen</strong>
-              <small>Öffnet in neuem Tab</small>
+              <small>Vorschau des Analyse-PDFs</small>
+            </span>
+          </a>
+          
+          <a href="/api/preview/contact-pdf" target="_blank" class="preview-btn contact-preview">
+            <span class="btn-icon">📧</span>
+            <span class="btn-text">
+              <strong>Kontakt-PDF ansehen</strong>
+              <small>Vorschau des Bestätigungs-PDFs</small>
             </span>
           </a>
         </div>
@@ -1273,6 +1350,15 @@ function printPage() {
   background: #fff5f5;
 }
 
+.preview-btn.contact-preview {
+  border-color: #22c55e;
+}
+
+.preview-btn.contact-preview:hover {
+  border-color: #1e7e34;
+  background: #f0fdf4;
+}
+
 .preview-btn .btn-icon {
   font-size: 2rem;
   flex-shrink: 0;
@@ -1340,11 +1426,63 @@ function printPage() {
   .actions {
     flex-direction: column;
   }
-  
   .watermark-bg {
     width: 60%;
     right: -15%;
   }
+}
+
+/* Radio Button Styles */
+.radio-options {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.5rem 0;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  color: #333;
+}
+
+.radio-label input[type="radio"] {
+  width: 1.2em;
+  height: 1.2em;
+  accent-color: #28a745;
+  margin: 0;
+  cursor: pointer;
+}
+
+
+.privacy-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: #555;
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.privacy-label input[type="checkbox"] {
+  margin-top: 0.2rem;
+  accent-color: #28a745;
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.text-link {
+  color: #4a90d9;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.text-link:hover {
+  text-decoration: none;
+  color: #357abd;
 }
 
 @media print {

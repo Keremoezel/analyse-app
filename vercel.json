@@ -1,0 +1,16 @@
+{
+    "functions": {
+        "server/api/preview/pdf/*.get.ts": {
+            "memory": 1024,
+            "maxDuration": 30
+        },
+        "server/api/preview/contact-pdf.get.ts": {
+            "memory": 1024,
+            "maxDuration": 10
+        },
+        "server/api/email/*.post.ts": {
+            "memory": 1024,
+            "maxDuration": 30
+        }
+    }
+}
