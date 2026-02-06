@@ -1499,4 +1499,19 @@ input[type="checkbox"] {
 .privacy-label span {
   color: #333;
 }
+
+/* Mobile responsive modal */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 95% !important;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 1.5rem !important;
+    margin: 1rem;
+  }
+}
+
+.modal-overlay {
+  z-index: 2000 !important; /* Ensure it's above the sticky header */
+}
 </style>

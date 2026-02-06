@@ -55,13 +55,24 @@ body {
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000; /* Increased z-index */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1.5rem;
   background: white;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  width: 100%; /* Ensure full width */
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    padding: 0.5rem 1rem;
+  }
+  
+  .logo-text {
+    font-size: 1rem; /* Smaller text on mobile */
+  }
 }
 
 .logo {

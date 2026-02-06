@@ -18,10 +18,20 @@ export async function generatePdf(html: string): Promise<Buffer> {
         // Browser options
         const options = isProduction
             ? {
-                args: chromium.args,
+                args: [
+                    ...chromium.args,
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                    '--disable-dev-shm-usage',
+                    '--disable-accelerated-2d-canvas',
+                    '--no-first-run',
+                    '--no-zygote',
+                    '--single-process',
+                    '--disable-gpu',
+                ],
                 defaultViewport: (chromium as any).defaultViewport,
                 executablePath: await chromium.executablePath('https://github.com/Sparticuz/chromium/releases/download/v143.0.4/chromium-v143.0.4-pack.x64.tar'),
-                headless: (chromium as any).headless as any,
+                headless: (chromium as any).headless,
                 ignoreHTTPSErrors: true,
             }
             : {

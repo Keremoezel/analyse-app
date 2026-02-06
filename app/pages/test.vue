@@ -24,6 +24,7 @@ const email = ref('')
 const verificationCode = ref('')
 const showInstructions = ref(true) // Show instructions first
 const testStarted = ref(false) // Track if test has started
+const isGeneratingReport = ref(false) // Track PDF generation status
 
 // Current question row
 const currentRow = computed(() => questions.value?.[currentRowIndex.value])
@@ -195,6 +196,7 @@ async function verifyAndSubmit() {
   }
   
   isSubmitting.value = true
+  isGeneratingReport.value = true
   error.value = ''
   
   try {
@@ -203,20 +205,25 @@ async function verifyAndSubmit() {
       score,
     }))
     
-    const result = await $fetch('/api/test/submit', {
-      method: 'POST',
-      body: {
-        email: email.value,
-        answers: answerArray,
-        code: verificationCode.value
-      },
-    })
+    // Minimum delay to show loading animation and prevent flicker
+    const [result] = await Promise.all([
+      $fetch('/api/test/submit', {
+        method: 'POST',
+        body: {
+          email: email.value,
+          answers: answerArray,
+          code: verificationCode.value
+        },
+      }),
+      new Promise(resolve => setTimeout(resolve, 1500))
+    ])
     
     // Navigate to result page
     await navigateTo(`/result/${result.resultId}`)
   } catch (e: any) {
     error.value = e.data?.message || 'Verifizierung fehlgeschlagen'
     isSubmitting.value = false
+    isGeneratingReport.value = false
   }
 }
 
@@ -312,6 +319,16 @@ function backToTest() {
         <button @click="startTest" class="start-test-btn">
           Verstanden, Test starten →
         </button>
+      </div>
+    </div>
+
+    <!-- Generating Report Loading Screen -->
+    <div v-else-if="isGeneratingReport" class="email-overlay">
+      <div class="email-card loading-card">
+        <div class="spinner-large"></div>
+        <h2>Analyse wird erstellt...</h2>
+        <p>Bitte haben Sie einen Moment Geduld.</p>
+        <p class="loading-hint">Ihr persönlicher Report wird generiert und per E-Mail versendet.</p>
       </div>
     </div>
 
@@ -497,6 +514,27 @@ function backToTest() {
 </template>
 
 <style scoped>
+.loading-card {
+  text-align: center;
+  padding: 3rem;
+}
+
+.spinner-large {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #4a90d9;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1.5rem;
+}
+
+.loading-hint {
+  font-size: 0.9rem;
+  color: #888;
+  margin-top: 0.5rem;
+}
+
 .test-container {
   max-width: 700px;
   margin: 0 auto;
