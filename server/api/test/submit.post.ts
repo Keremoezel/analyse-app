@@ -1,5 +1,5 @@
 import { db, schema } from '../../db'
-import { eq } from 'drizzle-orm'
+import { eq, and, gt, desc } from 'drizzle-orm'
 import { getAdjectiveMapping, DISG_QUESTIONS, type DisgType } from '../../utils/questions'
 
 interface AnswerItem {
@@ -10,6 +10,7 @@ interface AnswerItem {
 interface SubmitBody {
     email: string
     answers: AnswerItem[]
+    code: string // Verification code
 }
 
 export default defineEventHandler(async (event) => {
@@ -22,6 +23,33 @@ export default defineEventHandler(async (event) => {
             message: 'Ungültige E-Mail-Adresse',
         })
     }
+
+    // 1. Verify code
+    if (!body.code) {
+        throw createError({
+            statusCode: 400,
+            message: 'Bestätigungscode ist erforderlich',
+        })
+    }
+
+    const verification = await db.query.verifications.findFirst({
+        where: and(
+            eq(schema.verifications.email, body.email),
+            eq(schema.verifications.code, body.code),
+            gt(schema.verifications.expiresAt, new Date())
+        ),
+        orderBy: desc(schema.verifications.createdAt)
+    })
+
+    if (!verification) {
+        throw createError({
+            statusCode: 400,
+            message: 'Ungültiger oder abgelaufener Bestätigungscode',
+        })
+    }
+
+    // Delete the verification record so it can't be reused
+    await db.delete(schema.verifications).where(eq(schema.verifications.id, verification.id))
 
     // Validate answers
     if (!body.answers || body.answers.length !== 40) {

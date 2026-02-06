@@ -19,3 +19,11 @@ export const results = pgTable('results', {
     slug: text('slug').notNull().unique(), // Secure URL identifier
     createdAt: timestamp('created_at').defaultNow().notNull(),
 })
+// Verifications table for email codes
+export const verifications = pgTable('verifications', {
+    id: serial('id').primaryKey(),
+    email: text('email').notNull(),
+    code: text('code').notNull(),
+    expiresAt: timestamp('expires_at').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+})

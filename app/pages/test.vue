@@ -19,7 +19,9 @@ const timeLeft = ref(180) // 3 minutes in seconds
 const isSubmitting = ref(false)
 const error = ref('')
 const showEmailForm = ref(false) // Show email form after completing test
+const showVerificationForm = ref(false) // Show verification code form
 const email = ref('')
+const verificationCode = ref('')
 const showInstructions = ref(true) // Show instructions first
 const testStarted = ref(false) // Track if test has started
 
@@ -114,7 +116,7 @@ function completeTest() {
   showEmailForm.value = true
 }
 
-// Submit test with email
+// Submit email and request code
 async function submitTest() {
   if (isSubmitting.value) return
   
@@ -124,6 +126,33 @@ async function submitTest() {
     return
   }
   
+  isSubmitting.value = true
+  error.value = ''
+  
+  try {
+    await $fetch('/api/auth/send-code', {
+      method: 'POST',
+      body: { email: email.value },
+    })
+    
+    showEmailForm.value = false
+    showVerificationForm.value = true
+  } catch (e: any) {
+    error.value = e.data?.message || 'Code konnte nicht gesendet werden'
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+// Final verification and submission
+async function verifyAndSubmit() {
+  if (isSubmitting.value) return
+  
+  if (!verificationCode.value || verificationCode.value.length !== 6) {
+    error.value = 'Bitte geben Sie den 6-stelligen Code ein'
+    return
+  }
+
   if (!allComplete.value) {
     error.value = 'Bitte füllen Sie alle Zeilen vollständig aus'
     return
@@ -143,20 +172,35 @@ async function submitTest() {
       body: {
         email: email.value,
         answers: answerArray,
+        code: verificationCode.value
       },
     })
     
     // Navigate to result page
     await navigateTo(`/result/${result.resultId}`)
   } catch (e: any) {
-    error.value = e.data?.message || 'Ein Fehler ist aufgetreten'
+    error.value = e.data?.message || 'Verifizierung fehlgeschlagen'
     isSubmitting.value = false
+  }
+}
+
+async function resendCode() {
+  error.value = ''
+  try {
+    await $fetch('/api/auth/send-code', {
+      method: 'POST',
+      body: { email: email.value },
+    })
+    // Optional: show a small toast or success message
+  } catch (e: any) {
+    error.value = 'Fehler beim Erneuten Senden'
   }
 }
 
 // Go back to test from email form
 function backToTest() {
   showEmailForm.value = false
+  showVerificationForm.value = false
   error.value = ''
 }
 </script>
@@ -267,6 +311,48 @@ function backToTest() {
         <p class="privacy-note">
           🔒 Ihre Daten werden vertraulich behandelt.
         </p>
+      </div>
+    </div>
+
+    <!-- Verification Form (shown after email submission) -->
+    <div v-else-if="showVerificationForm" class="email-overlay">
+      <div class="email-card">
+        <div class="email-header">
+          <span class="code-icon">🔑</span>
+          <h2>E-Mail bestätigen</h2>
+          <p>Wir haben einen 6-stelligen Code an <strong>{{ email }}</strong> gesendet.</p>
+        </div>
+        
+        <form @submit.prevent="verifyAndSubmit" class="email-form">
+          <input 
+            v-model="verificationCode" 
+            type="text" 
+            placeholder="123456"
+            maxlength="6"
+            pattern="[0-9]*"
+            inputmode="numeric"
+            required
+            autofocus
+            class="code-input"
+          >
+          <p v-if="error" class="error">{{ error }}</p>
+          
+          <div class="email-actions">
+            <button type="button" @click="backToTest" class="back-btn">
+              ← Abbrechen
+            </button>
+            <button type="submit" :disabled="isSubmitting" class="submit-btn v-btn">
+              {{ isSubmitting ? 'Wird geprüft...' : 'Code bestätigen ✓' }}
+            </button>
+          </div>
+        </form>
+        
+        <div class="resend-section">
+          <p>Keinen Code erhalten?</p>
+          <button @click="resendCode" class="resend-btn" :disabled="isSubmitting">
+            Code erneut senden
+          </button>
+        </div>
       </div>
     </div>
 
@@ -918,5 +1004,43 @@ function backToTest() {
     flex-direction: column;
     gap: 0.5rem;
   }
+}
+.code-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.code-input {
+  letter-spacing: 4px;
+  font-weight: bold;
+  font-size: 1.5rem !important;
+}
+
+.resend-section {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: #666;
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+}
+
+.resend-btn {
+  background: none;
+  border: none;
+  color: #4a90d9;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: opacity 0.2s;
+}
+
+.resend-btn:hover {
+  text-decoration: underline;
+}
+
+.resend-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>

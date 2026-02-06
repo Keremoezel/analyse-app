@@ -85,7 +85,7 @@ export default defineEventHandler(async (event) => {
         // 3. Send Email with Attachment
         const resend = new Resend(useRuntimeConfig().emailApiKey)
         const emailTo = body.email
-        const emailFrom = useRuntimeConfig().emailFromNoreply || 'noreply@yourdomain.com'
+        const emailFrom = useRuntimeConfig().emailFromSupport || 'support@yourdomain.com'
 
         // Simple HTML Body
         const htmlBody = `

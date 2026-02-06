@@ -484,28 +484,6 @@ function printPage() {
         </div>
       </div>
 
-      <!-- Template Preview Section -->
-      <div class="template-preview-section">
-        <h3>📧 Email-Vorschau (für Entwicklung)</h3>
-        <p class="preview-desc">Sehen Sie, wie Ihre Analyse-Email und das PDF-Dokument aussehen würden:</p>
-        <div class="preview-buttons">
-          <a :href="`/api/preview/pdf/${resultId}`" target="_blank" class="preview-btn pdf">
-            <span class="btn-icon">📄</span>
-            <span class="btn-text">
-              <strong>PDF-Report ansehen</strong>
-              <small>Vorschau des Analyse-PDFs</small>
-            </span>
-          </a>
-          
-          <a href="/api/preview/contact-pdf" target="_blank" class="preview-btn contact-preview">
-            <span class="btn-icon">📧</span>
-            <span class="btn-text">
-              <strong>Kontakt-PDF ansehen</strong>
-              <small>Vorschau des Bestätigungs-PDFs</small>
-            </span>
-          </a>
-        </div>
-      </div>
     </div>
     
     <div v-else class="loading">

@@ -34,14 +34,6 @@ export default defineNuxtConfig({
       config: {
         // @ts-ignore - Nitro/Vercel functions config
         functions: {
-          'server/api/preview/pdf/[id].get.ts': {
-            memory: 1024,
-            maxDuration: 30
-          },
-          'server/api/preview/contact-pdf.get.ts': {
-            memory: 1024,
-            maxDuration: 30
-          },
           'server/api/email/*.post.ts': {
             memory: 1024,
             maxDuration: 30
