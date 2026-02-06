@@ -22,7 +22,7 @@ const showEmailForm = ref(false) // Show email form after completing test
 const showVerificationForm = ref(false) // Show verification code form
 const email = ref('')
 const verificationCode = ref('')
-const showInstructions = ref(true) // Show instructions first
+const isShowingInstructions = ref(true) // Show instructions first
 const testStarted = ref(false) // Track if test has started
 const isGeneratingReport = ref(false) // Track PDF generation status
 
@@ -36,7 +36,7 @@ let timer: ReturnType<typeof setInterval> | null = null
 
 // Start the test (called after reading instructions)
 function startTest() {
-  showInstructions.value = false
+  isShowingInstructions.value = false
   testStarted.value = true
   
   // Start timer only when test begins
@@ -251,7 +251,7 @@ function backToTest() {
 <template>
   <div class="test-container">
     <!-- Instructions Screen -->
-    <div v-if="showInstructions" class="instructions-screen">
+    <div v-if="isShowingInstructions" class="instructions-screen">
       <div class="instructions-card">
         <div class="instructions-header">
           <span class="instructions-icon">📋</span>
