@@ -1,4 +1,6 @@
 import { Resend } from 'resend'
+import { db, schema } from '../../db'
+import { eq } from 'drizzle-orm'
 
 interface SendContactEmailBody {
     name: string
@@ -7,6 +9,7 @@ interface SendContactEmailBody {
     availability?: string
     message: string
     sendCopy?: boolean
+    resultId?: number // For tracking analytics
 }
 
 export default defineEventHandler(async (event) => {
@@ -70,7 +73,7 @@ export default defineEventHandler(async (event) => {
                 await resend.emails.send({
                     from: adminEmailData.from,
                     to: body.email,
-                    subject: 'Bestätigung Ihrer Kontaktanfrage - Power4-people',
+                    subject: 'Bestätigung Ihrer Kontaktanfrage - power4-people',
                     html: `
                         <div style="font-family: sans-serif; line-height: 1.5; color: #333;">
                             <h2>Vielen Dank für Ihre Anfrage!</h2>
@@ -79,7 +82,7 @@ export default defineEventHandler(async (event) => {
                             <p>Im Anhang finden Sie eine Kopie Ihrer Anfrage als PDF-Dokument.</p>
                             <br>
                             <p>Mit freundlichen Grüßen,</p>
-                            <p><strong>Power4-people Team</strong></p>
+                            <p><strong>power4-people Team</strong></p>
                         </div>
                     `,
                     attachments: [
@@ -92,6 +95,18 @@ export default defineEventHandler(async (event) => {
             } catch (confirmError) {
                 console.error('Failed to send confirmation email to user:', confirmError)
                 // Continue even if confirmation fails
+            }
+        }
+
+        // Track analytics: Mark result as contacted
+        if (body.resultId) {
+            try {
+                await db.update(schema.results)
+                    .set({ contactedAt: new Date() })
+                    .where(eq(schema.results.id, body.resultId))
+            } catch (dbError) {
+                console.error('Failed to update result analytics:', dbError)
+                // Non-critical, continue
             }
         }
 
@@ -205,7 +220,7 @@ function generateContactPdfHTML(data: any) {
 <body>
     <div class="header">
         <h1>Kopie Ihrer Kontaktanfrage</h1>
-        <p>Power4-people Kurzanalyse</p>
+        <p>power4-people Kurzanalyse</p>
     </div>
 
     <div class="section">
@@ -240,7 +255,7 @@ function generateContactPdfHTML(data: any) {
     </div>
 
     <div class="footer">
-        © ${new Date().getFullYear()} Power4-people Team | DISG Persönlichkeitsanalyse
+        © ${new Date().getFullYear()} power4-people Team - Kurzanalyse
     </div>
 </body>
 </html>

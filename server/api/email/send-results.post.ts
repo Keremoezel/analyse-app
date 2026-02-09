@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
 <body style="font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; padding: 20px;">
     <p>Hallo ${name},</p>
     
-    <p>vielen Dank für Ihre Teilnahme am DISG Persönlichkeitstest.</p>
+    <p>vielen Dank für Ihre Teilnahme am power4-people Kurzanalyse.</p>
     
     <p><strong>Anbei erhalten Sie Ihre detaillierte Auswertung als PDF-Dokument.</strong></p>
     
@@ -108,7 +108,7 @@ export default defineEventHandler(async (event) => {
     
     <p style="margin-top: 30px; font-size: 14px; color: #666;">
         Mit freundlichen Grüßen,<br>
-        <strong>Ihr Power4-people Team</strong>
+        <strong>Ihr power4-people Team</strong>
     </p>
 </body>
 </html>
@@ -117,11 +117,11 @@ export default defineEventHandler(async (event) => {
         await resend.emails.send({
             from: emailFrom,
             to: emailTo,
-            subject: 'Ihre DISG Persönlichkeitsanalyse (PDF)',
+            subject: 'Ihre power4-people Kurzanalyse (PDF)',
             html: htmlBody,
             attachments: [
                 {
-                    filename: `DISG-Analyse-${name}.pdf`,
+                    filename: `power4-people-Kurzanalyse-${name}.pdf`,
                     content: pdfBuffer,
                 },
             ],

@@ -49,7 +49,7 @@
       </section>
 
       <section>
-        <h2>Verbraucherstreitbeilegung/Universalschlichtungsstelle</h2>
+        <h2>Verbraucherstreitbeilegung / Universalschlichtungsstelle</h2>
         <p>
           Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
         </p>
@@ -64,6 +64,8 @@
   min-height: 80vh;
 }
 
+
+
 .content-container {
   max-width: 800px;
   margin: 0 auto;
@@ -77,6 +79,7 @@ h1 {
   font-size: 2rem;
   margin-bottom: 2rem;
   color: #1a1a2e;
+  word-wrap: break-word;
 }
 
 h2 {
@@ -84,11 +87,13 @@ h2 {
   margin-top: 2rem;
   margin-bottom: 1rem;
   color: #333;
+  word-wrap: break-word;
 }
 
 p {
   margin-bottom: 1rem;
   line-height: 1.7;
   color: #555;
+  word-wrap: break-word;
 }
 </style>

@@ -52,12 +52,13 @@ export default defineNuxtConfig({
   // Runtime config
   runtimeConfig: {
     // Server-side only (kept secret)
-    adminPassword: '',
+    adminPassword: process.env.NUXT_ADMIN_PASSWORD || '',
     emailFromNoreply: process.env.EMAIL_FROM_NOREPLY || '',
     emailFromSupport: process.env.EMAIL_FROM_SUPPORT || '',
     emailApiKey: process.env.EMAIL_API_KEY || '',
     emailAdminRecipient: process.env.EMAIL_ADMIN_RECIPIENT || '',
     testCheatcode: process.env.TEST_CHEATCODE || '',
+    allowedEmails: process.env.ALLOWED_EMAILS || '',
 
     // Public (exposed to client)
     public: {

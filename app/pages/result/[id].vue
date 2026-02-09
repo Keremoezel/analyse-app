@@ -142,6 +142,17 @@ function closeContactModal() {
   contactSuccess.value = false
 }
 
+// Sample Report Modal
+const showSampleReportModal = ref(false)
+
+function openSampleReport() {
+  showSampleReportModal.value = true
+}
+
+function closeSampleReport() {
+  showSampleReportModal.value = false
+}
+
 async function submitContactForm() {
   if (isSubmittingContact.value) return
   
@@ -153,6 +164,11 @@ async function submitContactForm() {
   
   if (!contactForm.value.email.includes('@')) {
     contactError.value = 'Bitte geben Sie eine gültige E-Mail-Adresse ein'
+    return
+  }
+
+  if (selectedMethod.value === 'Anruf' && (!contactForm.value.phone || contactForm.value.phone.trim() === '')) {
+    contactError.value = 'Bitte geben Sie Ihre Telefonnummer für den Rückruf an'
     return
   }
 
@@ -173,7 +189,8 @@ async function submitContactForm() {
         phone: contactForm.value.phone,
         availability: selectedMethod.value === 'Anruf' ? contactForm.value.availability : undefined,
         message: contactForm.value.message,
-        sendCopy: contactForm.value.sendCopy
+        sendCopy: contactForm.value.sendCopy,
+        resultId: parseInt(route.params.id as string) // Link contact to result for analytics
       },
     })
     
@@ -219,7 +236,10 @@ function printPage() {
         
         <div class="result-type">
           <span class="type-letter" :style="{ background: typeDescriptions[dominantType].color }">
-            {{ dominantType }}
+            <img border-radius="50%"
+              :src="typeDescriptions[dominantType].image"
+              alt=""
+            />
           </span>
           <div class="type-details">
             <h2>{{ typeDescriptions[dominantType].name }}</h2>
@@ -356,9 +376,9 @@ function printPage() {
         </p>
         
         <div class="cta-buttons">
-          <a href="#" class="cta-btn sample-btn" target="_blank">
+          <button @click="openSampleReport" class="cta-btn sample-btn">
             📄 Musterauswertung ansehen
-          </a>
+          </button>
           <button @click="openContactModal" class="cta-btn contact-btn">
             ℹ️ Ich will weitere Informationen
           </button>
@@ -399,12 +419,13 @@ function printPage() {
             </div>
             
             <div class="form-group">
-              <label for="contact-phone">Telefon (optional)</label>
+              <label for="contact-phone">Telefon <span v-if="selectedMethod === 'Anruf'">*</span><span v-else>(optional)</span></label>
               <input 
                 id="contact-phone"
                 v-model="contactForm.phone" 
                 type="tel" 
                 placeholder="+49 123 456789"
+                :required="selectedMethod === 'Anruf'"
               >
             </div>
             
@@ -482,6 +503,13 @@ function printPage() {
           </form>
         </div>
       </div>
+
+      <SecurePDFViewer 
+        :show="showSampleReportModal"
+        pdf-url="/Musterauswertung_Anngepast.pdf"
+        title="Musterauswertung"
+        @close="closeSampleReport"
+      />
 
     </div>
     
@@ -1187,6 +1215,12 @@ function printPage() {
   display: flex;
   gap: 0.75rem;
   margin-top: 0.5rem;
+}
+.type-letter img {
+  width: 64px;
+  height:64px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .btn-cancel,
