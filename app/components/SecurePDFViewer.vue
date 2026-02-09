@@ -55,8 +55,9 @@ function calculateOptimalWidth() {
   const containerWidth = container.clientWidth
   const isMobile = window.innerWidth <= 768
   
-  // Use lower scale on mobile to prevent memory issues
-  pdfScale.value = isMobile ? 1.3 : 2
+  // Use much lower scale on mobile/touch devices to prevent memory crashes
+  const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0)
+  pdfScale.value = (isMobile || isTouch) ? 1.0 : 1.8
   
   // Calculate optimal PDF width with minimal padding
   // Less padding on desktop for wider PDF
@@ -106,10 +107,11 @@ onUnmounted(() => {
 <template>
   <div v-if="show" class="modal-overlay" @click="emit('close')">
     <div class="modal-content pdf-modal" @click.stop>
-      <button class="modal-close" @click="emit('close')" aria-label="Schließen">✕</button>
-      
       <div class="modal-header">
-        <h3>{{ title || 'Dokumentenansicht' }}</h3>
+        <div class="header-top">
+          <h3>{{ title || 'Dokumentenansicht' }}</h3>
+          <button class="modal-close-btn" @click="emit('close')" aria-label="Schließen">✕</button>
+        </div>
         <div class="pdf-notice">
           <span class="notice-icon">⚠️</span>
           <span class="notice-text">
@@ -170,6 +172,7 @@ onUnmounted(() => {
   width: 95%;
   max-width: 1000px;
   height: 90vh;
+  height: 90dvh;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -177,45 +180,48 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
-.modal-close {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: rgba(255, 255, 255, 0.95);
-  border: 2px solid #ddd;
-  font-size: 1.2rem;
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 12px;
+}
+
+.modal-close-btn {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  font-size: 1.1rem;
   cursor: pointer;
-  color: #333;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  color: #475569;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s;
-  z-index: 9999;
+  flex-shrink: 0;
   font-weight: bold;
 }
 
-.modal-close:hover {
+.modal-close-btn:hover {
   background: #f44336;
   color: white;
   border-color: #f44336;
-  transform: rotate(90deg);
 }
 
 .modal-header {
-  padding: 20px 25px;
+  padding: 15px 20px;
   border-bottom: 1px solid #eee;
   background: #f8fafc;
   flex-shrink: 0;
 }
 
 .modal-header h3 {
-  margin: 0 0 12px 0;
-  font-size: 1.25rem;
+  margin: 0;
+  font-size: 1.15rem;
   color: #1a1a2e;
-  padding-right: 40px;
 }
 
 .pdf-notice {
@@ -372,28 +378,19 @@ onUnmounted(() => {
   .modal-content.pdf-modal {
     width: 100%;
     height: 100vh;
+    height: 100dvh;
     border-radius: 0;
     max-height: 100vh;
-  }
-  
-  .modal-close {
-    top: 10px;
-    right: 10px;
-    width: 32px;
-    height: 32px;
-    font-size: 1.1rem;
-    background: rgba(255, 255, 255, 0.98);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    max-height: 100dvh;
   }
   
   .modal-header {
-    padding: 50px 15px 12px 15px; /* Added top padding to avoid close button overlap */
+    padding: 15px 15px 10px 15px; 
   }
   
   .modal-header h3 {
-    font-size: 1rem;
-    padding-right: 0; /* Removed since we have top padding now */
-    margin-bottom: 8px;
+    font-size: 0.95rem;
+    margin-bottom: 0;
   }
   
   .pdf-notice {
@@ -428,14 +425,6 @@ onUnmounted(() => {
 
 /* Mobile phones */
 @media (max-width: 480px) {
-  .modal-close {
-    top: 8px;
-    right: 8px;
-    width: 30px;
-    height: 30px;
-    font-size: 1rem;
-  }
-  
   .modal-header {
     padding: 45px 12px 10px 12px; /* Added top padding to avoid close button overlap */
   }
@@ -518,19 +507,11 @@ onUnmounted(() => {
   .pdf-container {
     padding: 8px 5px;
   }
-  
-  .modal-close {
-    top: 6px;
-    right: 6px;
-    width: 28px;
-    height: 28px;
-    font-size: 0.95rem;
-  }
 }
 
 /* Touch device optimizations */
 @media (hover: none) and (pointer: coarse) {
-  .modal-close {
+  .modal-close-btn {
     /* Larger touch target */
     min-width: 44px;
     min-height: 44px;
