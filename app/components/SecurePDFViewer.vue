@@ -18,6 +18,7 @@ const isLoading = ref(true)
 const pageCount = ref(0)
 const pdfContainerRef = ref<HTMLElement | null>(null)
 const pdfWidth = ref<number | undefined>(undefined)
+const pdfScale = ref(2)
 
 function onDocumentLoaded(document: any) {
   isLoading.value = false
@@ -54,6 +55,9 @@ function calculateOptimalWidth() {
   const containerWidth = container.clientWidth
   const isMobile = window.innerWidth <= 768
   
+  // Use lower scale on mobile to prevent memory issues
+  pdfScale.value = isMobile ? 1.3 : 2
+  
   // Calculate optimal PDF width with minimal padding
   // Less padding on desktop for wider PDF
   const padding = isMobile ? 12 : 10
@@ -65,14 +69,14 @@ function calculateOptimalWidth() {
   const maxHeightBasedWidth = (containerHeight - 15) / 1.414 // A4 ratio
   
   // Use the smaller of the two to ensure full page visibility
-  // Add 8% more size on desktop, 5% on mobile for better readability
-  const sizeIncrease = isMobile ? 1.05 : 1.08
+  // Smaller size increase on mobile to reduce memory usage
+  const sizeIncrease = isMobile ? 1.02 : 1.08
   const finalWidth = Math.min(optimalWidth, maxHeightBasedWidth) * sizeIncrease
   
   // Set the PDF width (vue-pdf-embed will render at this width natively)
   pdfWidth.value = Math.max(finalWidth, 300) // minimum 300px
   
-  console.log('Calculated PDF width:', pdfWidth.value, 'container:', containerWidth, 'x', containerHeight)
+  console.log('Calculated PDF width:', pdfWidth.value, 'scale:', pdfScale.value, 'container:', containerWidth, 'x', containerHeight)
 }
 
 // Watch for modal opening and recalculate
@@ -129,7 +133,7 @@ onUnmounted(() => {
             <VuePdfEmbed 
               :source="pdfUrl"
               :width="pdfWidth"
-              :scale="2"
+              :scale="pdfScale"
               class="pdf-document"
               :text-layer="false"
               :annotation-layer="false"
@@ -253,6 +257,9 @@ onUnmounted(() => {
   justify-content: center;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  /* Performance optimizations */
+  contain: layout style paint;
+  will-change: scroll-position;
 }
 
 .pdf-wrapper {
@@ -276,6 +283,9 @@ onUnmounted(() => {
 .pdf-document {
   background: white;
   display: block;
+  /* Optimize rendering performance */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .loading-state {
