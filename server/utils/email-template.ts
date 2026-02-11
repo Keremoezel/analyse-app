@@ -6,40 +6,60 @@ export const typeDescriptions = {
         color: '#dc3545',
         bgColor: '#fef2f2',
         icon: '🔥',
-        traits: ['Ergebnisorientiert', 'Entscheidungsfreudig', 'Wettbewerbsorientiert', 'Direkt', 'Zielstrebig'],
-        description: 'Sie sind eine durchsetzungsstarke Persönlichkeit, die Herausforderungen liebt und schnelle Entscheidungen trifft.',
-        strengths: ['Führungsstärke', 'Entschlossenheit', 'Problemlösung'],
-        challenges: ['Ungeduld', 'Risikobereitschaft', 'Dominanz'],
+        traits: ['fordernd', 'entschlossen', 'entschieden', 'zielgerichtet', 'willensstark', 'sachorientiert'],
+        description: 'Sie sind eine forsche und direkte Persönlichkeit, die sachorientiert handelt und Herausforderungen mit Entschlossenheit begegnet.',
+        strengths: ['Willensstärke', 'Zielstrebigkeit', 'Entscheidungsfreude'],
+        challenges: ['Dominanz', 'Forschheit', 'Ungeduld'],
+        communication: {
+            bodyLanguage: 'forsch, direkt, kontrollierend',
+            voice: 'stark, klar, direkt, zielstrebig',
+            words: 'Ergebnis, Nutzen'
+        }
     },
     I: {
         name: 'Gelb',
         color: '#facc15',
         bgColor: '#fefce8',
         icon: '⭐',
-        traits: ['Enthusiastisch', 'Optimistisch', 'Kontaktfreudig', 'Überzeugend', 'Kreativ'],
-        description: 'Sie sind eine inspirierende Persönlichkeit, die Menschen begeistert und gerne im Mittelpunkt steht.',
-        strengths: ['Kommunikation', 'Motivation', 'Networking'],
-        challenges: ['Detailarbeit', 'Zeitmanagement', 'Fokus'],
+        traits: ['umgänglich', 'enthusiastisch', 'ausdrucksstark', 'dynamisch', 'offen', 'überzeugend'],
+        description: 'Sie sind eine enthusiastische und offene Persönlichkeit, die Menschen durch ihre ausdrucksstarke und dynamische Art begeistert.',
+        strengths: ['Überzeugungskraft', 'Optimismus', 'Begeisterungsfähigkeit'],
+        challenges: ['Detailfokus', 'Beständigkeit', 'Ernsthaftigkeit'],
+        communication: {
+            bodyLanguage: 'offen, fröhlich, ausdrucksstark',
+            voice: 'begeistert, locker, laut, schnell',
+            words: 'Spaß, aufregend'
+        }
     },
     S: {
         name: 'Grün',
         color: '#22c55e',
         bgColor: '#f0fdf4',
         icon: '🌿',
-        traits: ['Geduldig', 'Zuverlässig', 'Teamfähig', 'Unterstützend', 'Loyal'],
-        description: 'Sie sind eine harmonische Persönlichkeit, die Stabilität schätzt und anderen hilft.',
-        strengths: ['Teamarbeit', 'Zuhören', 'Beständigkeit'],
-        challenges: ['Veränderungen', 'Konfrontation', 'Tempo'],
+        traits: ['vertrauensvoll', 'ermutigend', 'mitfühlend', 'geduldig', 'freundlich', 'entspannt'],
+        description: 'Sie sind eine herzliche und geduldige Persönlichkeit, die Harmonie schätzt und eine unterstützende Atmosphäre schafft.',
+        strengths: ['Teamfähigkeit', 'Loyalität', 'Einfühlungsvermögen'],
+        challenges: ['Konfrontationsbereitschaft', 'Veränderungstempo', 'Durchsetzungsvermögen'],
+        communication: {
+            bodyLanguage: 'zurückhaltend, warm, herzlich',
+            voice: 'ruhig, Pausen, zögernd, sanft',
+            words: 'Beziehung, Garantien, Versprechen'
+        }
     },
     G: {
         name: 'Blau',
         color: '#3b82f6',
         bgColor: '#eff6ff',
         icon: '🎯',
-        traits: ['Analytisch', 'Genau', 'Strukturiert', 'Qualitätsbewusst', 'Planend'],
-        description: 'Sie sind eine präzise Persönlichkeit, die Qualität und Genauigkeit über alles stellt.',
-        strengths: ['Analyse', 'Planung', 'Qualitätssicherung'],
-        challenges: ['Perfektionismus', 'Überanalyse', 'Kritik'],
+        traits: ['vorsichtig', 'präzise', 'besonnen', 'hinterfragend', 'formal', 'analytisch'],
+        description: 'Sie sind eine analytische und präzise Persönlichkeit, die Wert auf Qualität, Fakten und eine besonnene Vorgehensweise legt.',
+        strengths: ['Genauigkeit', 'Struktur', 'Qualitätsbewusstsein'],
+        challenges: ['Flexibilität', 'Schnelligkeit', 'Emotionalität'],
+        communication: {
+            bodyLanguage: 'distanziert, kühl',
+            voice: 'monoton, ruhig, langsam, nachdenklich',
+            words: 'Fakten, ZDF, Sicherheit'
+        }
     },
 }
 
@@ -133,6 +153,29 @@ export function generateResultEmailHTML(data: any) {
             <ul style="padding-left: 20px; margin-bottom: 0;">
                 ${challengesHtml}
             </ul>
+        </div>
+    </div>
+
+    <!-- Communication Style Section -->
+    <div style="background: ${typeBg}; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #1a1a2e; font-size: 18px;">🗣️ Ihr Kommunikationsstil</h3>
+        <p style="margin-bottom: 20px; color: #666; font-size: 14px;">So drücken Sie sich aus und so nehmen andere Sie wahr.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+                <span style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px;">👋 Körpersprache</span>
+                <p style="margin: 0; font-size: 14px; color: #334155; font-weight: 500;">${typeData.communication.bodyLanguage}</p>
+            </div>
+            
+            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+                <span style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px;">🗣️ Stimme</span>
+                <p style="margin: 0; font-size: 14px; color: #334155; font-weight: 500;">${typeData.communication.voice}</p>
+            </div>
+            
+            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+                <span style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px;">✍️ Bevorzugte Worte</span>
+                <p style="margin: 0; font-size: 14px; color: #334155; font-weight: 500;">${typeData.communication.words}</p>
+            </div>
         </div>
     </div>
 

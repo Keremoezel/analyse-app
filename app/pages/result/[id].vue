@@ -27,10 +27,15 @@ const typeDescriptions = {
     bgColor: '#fef2f2',
     icon: '🔥',
     image: '/reedpeople.png',
-    traits: ['Ergebnisorientiert', 'Entscheidungsfreudig', 'Wettbewerbsorientiert', 'Direkt', 'Zielstrebig'],
-    description: 'Sie sind eine durchsetzungsstarke Persönlichkeit, die Herausforderungen liebt und schnelle Entscheidungen trifft.',
-    strengths: ['Führungsstärke', 'Entschlossenheit', 'Problemlösung'],
-    challenges: ['Ungeduld', 'Risikobereitschaft', 'Dominanz'],
+    traits: ['fordernd', 'entschlossen', 'entschieden', 'zielgerichtet', 'willensstark', 'sachorientiert'],
+    description: 'Sie sind eine forsche und direkte Persönlichkeit, die sachorientiert handelt und Herausforderungen mit Entschlossenheit begegnet.',
+    strengths: ['Willensstärke', 'Zielstrebigkeit', 'Entscheidungsfreude'],
+    challenges: ['Dominanz', 'Forschheit', 'Ungeduld'],
+    communication: {
+      bodyLanguage: 'forsch, direkt, kontrollierend',
+      voice: 'stark, klar, direkt, zielstrebig',
+      words: 'Ergebnis, Nutzen'
+    }
   },
   I: {
     name: 'Gelb',
@@ -38,10 +43,15 @@ const typeDescriptions = {
     bgColor: '#fefce8',
     icon: '⭐',
     image: '/yellowpeople.png',
-    traits: ['Enthusiastisch', 'Optimistisch', 'Kontaktfreudig', 'Überzeugend', 'Kreativ'],
-    description: 'Sie sind eine inspirierende Persönlichkeit, die Menschen begeistert und gerne im Mittelpunkt steht.',
-    strengths: ['Kommunikation', 'Motivation', 'Networking'],
-    challenges: ['Detailarbeit', 'Zeitmanagement', 'Fokus'],
+    traits: ['umgänglich', 'enthusiastisch', 'ausdrucksstark', 'dynamisch', 'offen', 'überzeugend'],
+    description: 'Sie sind eine enthusiastische und offene Persönlichkeit, die Menschen durch ihre ausdrucksstarke und dynamische Art begeistert.',
+    strengths: ['Überzeugungskraft', 'Optimismus', 'Begeisterungsfähigkeit'],
+    challenges: ['Detailfokus', 'Beständigkeit', 'Ernsthaftigkeit'],
+    communication: {
+      bodyLanguage: 'offen, fröhlich, ausdrucksstark',
+      voice: 'begeistert, locker, laut, schnell',
+      words: 'Spaß, aufregend'
+    }
   },
   S: {
     name: 'Grün',
@@ -49,10 +59,15 @@ const typeDescriptions = {
     bgColor: '#f0fdf4',
     icon: '🌿',
     image: '/greenpeople.png',
-    traits: ['Geduldig', 'Zuverlässig', 'Teamfähig', 'Unterstützend', 'Loyal'],
-    description: 'Sie sind eine harmonische Persönlichkeit, die Stabilität schätzt und anderen hilft.',
-    strengths: ['Teamarbeit', 'Zuhören', 'Beständigkeit'],
-    challenges: ['Veränderungen', 'Konfrontation', 'Tempo'],
+    traits: ['vertrauensvoll', 'ermutigend', 'mitfühlend', 'geduldig', 'freundlich', 'entspannt'],
+    description: 'Sie sind eine herzliche und geduldige Persönlichkeit, die Harmonie schätzt und eine unterstützende Atmosphäre schafft.',
+    strengths: ['Teamfähigkeit', 'Loyalität', 'Einfühlungsvermögen'],
+    challenges: ['Konfrontationsbereitschaft', 'Veränderungstempo', 'Durchsetzungsvermögen'],
+    communication: {
+      bodyLanguage: 'zurückhaltend, warm, herzlich',
+      voice: 'ruhig, Pausen, zögernd, sanft',
+      words: 'Beziehung, Garantien, Versprechen'
+    }
   },
   G: {
     name: 'Blau',
@@ -60,10 +75,15 @@ const typeDescriptions = {
     bgColor: '#eff6ff',
     icon: '🎯',
     image: '/bluepeople.png',
-    traits: ['Analytisch', 'Genau', 'Strukturiert', 'Qualitätsbewusst', 'Planend'],
-    description: 'Sie sind eine präzise Persönlichkeit, die Qualität und Genauigkeit über alles stellt.',
-    strengths: ['Analyse', 'Planung', 'Qualitätssicherung'],
-    challenges: ['Perfektionismus', 'Überanalyse', 'Kritik'],
+    traits: ['vorsichtig', 'präzise', 'besonnen', 'hinterfragend', 'formal', 'analytisch'],
+    description: 'Sie sind eine analytische und präzise Persönlichkeit, die Wert auf Qualität, Fakten und eine besonnene Vorgehensweise legt.',
+    strengths: ['Genauigkeit', 'Struktur', 'Qualitätsbewusstsein'],
+    challenges: ['Flexibilität', 'Schnelligkeit', 'Emotionalität'],
+    communication: {
+      bodyLanguage: 'distanziert, kühl',
+      voice: 'monoton, ruhig, langsam, nachdenklich',
+      words: 'Fakten, ZDF, Sicherheit'
+    }
   },
 }
 
@@ -358,6 +378,40 @@ function printPage() {
               {{ challenge }}
             </li>
           </ul>
+        </div>
+      </div>
+
+      <!-- Communication Style Section -->
+      <div class="communication-section" :style="{ background: typeDescriptions[dominantType].bgColor }">
+        <div class="communication-header">
+          <h3>🗣️ Ihr Kommunikationsstil</h3>
+          <p>So drücken Sie sich aus und so nehmen andere Sie wahr.</p>
+        </div>
+        
+        <div class="communication-grid">
+          <div class="comm-card">
+            <div class="comm-icon">👋</div>
+            <div class="comm-info">
+              <span class="comm-label">Körpersprache</span>
+              <p>{{ typeDescriptions[dominantType].communication.bodyLanguage }}</p>
+            </div>
+          </div>
+          
+          <div class="comm-card">
+            <div class="comm-icon">🗣️</div>
+            <div class="comm-info">
+              <span class="comm-label">Stimme</span>
+              <p>{{ typeDescriptions[dominantType].communication.voice }}</p>
+            </div>
+          </div>
+          
+          <div class="comm-card">
+            <div class="comm-icon">✍️</div>
+            <div class="comm-info">
+              <span class="comm-label">Bevorzugte Worte</span>
+              <p>{{ typeDescriptions[dominantType].communication.words }}</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1494,6 +1548,96 @@ function printPage() {
 .text-link:hover {
   text-decoration: none;
   color: #357abd;
+}
+
+
+/* Communication Style */
+.communication-section {
+  margin: 2rem 0;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.communication-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.communication-header h3 {
+  font-size: 1.4rem;
+  color: #1a1a2e;
+  margin-bottom: 0.5rem;
+}
+
+.communication-header p {
+  color: #666;
+  font-size: 1rem;
+}
+
+.communication-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.comm-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  transition: transform 0.2s;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.comm-card:hover {
+  transform: translateY(-3px);
+}
+
+.comm-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.comm-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.comm-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.comm-info p {
+  font-size: 1rem;
+  color: #334155;
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .communication-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .communication-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media print {
