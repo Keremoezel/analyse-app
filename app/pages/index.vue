@@ -14,14 +14,14 @@
       
       <div class="info-section">
         <h3>Welche Persönlichkeitstypen gibt es?</h3>
+        <p class="info-text">
+          Es gibt unzählige Variationen. In der Kurzanalyse beschränken wir uns auf die 4 Hauptfarben, die Ihnen helfen, sich selbst und andere besser zu verstehen.
+        </p>
         <div class="types-grid">
           <UCard class="type-card type-g" :ui="{ root: 'bg-transparent ring-0 shadow-none', body: '!p-0' }">
             <div class="card-inner">
               <div class="image-bg">
-                <img src="/images/characters/char-blue.png" alt="Blau" class="type-image">
-              </div>
-              <div class="type-content">
-                <h4 class="type-title">Blau</h4>
+                <img src="/images/characters/bluenew.png" alt="Blau" class="type-image">
               </div>
             </div>
             <div class="card-shine"></div>
@@ -30,10 +30,7 @@
           <UCard class="type-card type-d" :ui="{ root: 'bg-transparent ring-0 shadow-none', body: '!p-0' }">
             <div class="card-inner">
               <div class="image-bg">
-                <img src="/images/characters/char-red-active.png" alt="Rot" class="type-image">
-              </div>
-              <div class="type-content">
-                <h4 class="type-title">Rot</h4>
+                <img src="/images/characters/rednew.png" alt="Rot" class="type-image">
               </div>
             </div>
             <div class="card-shine"></div>
@@ -42,10 +39,7 @@
           <UCard class="type-card type-s" :ui="{ root: 'bg-transparent ring-0 shadow-none', body: '!p-0' }">
             <div class="card-inner">
               <div class="image-bg">
-                <img src="/images/characters/char-green-active.png" alt="Grün" class="type-image">
-              </div>
-              <div class="type-content">
-                <h4 class="type-title">Grün</h4>
+                <img src="/images/characters/greennew.png" alt="Grün" class="type-image">
               </div>
             </div>
             <div class="card-shine"></div>
@@ -54,10 +48,7 @@
           <UCard class="type-card type-i" :ui="{ root: 'bg-transparent ring-0 shadow-none', body: '!p-0' }">
             <div class="card-inner">
               <div class="image-bg">
-                <img srcset="/images/characters/char-yellow-active.png 1x" alt="Gelb" class="type-image">
-              </div>
-              <div class="type-content">
-                <h4 class="type-title">Gelb</h4>
+                <img srcset="/images/characters/yellownew.png 1x" alt="Gelb" class="type-image">
               </div>
             </div>
             <div class="card-shine"></div>
@@ -196,7 +187,7 @@ h1 {
 
 .type-card {
   padding: 0;
-  border-radius: 16px;
+  border-radius: 40px;
   position: relative;
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -215,7 +206,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  min-height: 180px;
+  min-height: 220px;
   justify-content: center;
   position: relative;
   z-index: 1;
@@ -242,15 +233,16 @@ h1 {
 }
 
 .image-bg {
-  background: transparent;
-  border-radius: 12px;
+  background: white;
+  border-radius: 32px;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  max-width: 100%;
-  height: 150px;
+  width: 90%;
+  max-width: 90%;
+  height: 200px;
+  margin: 0 auto;
   transition: all 0.3s;
   overflow: hidden;
 }
@@ -260,13 +252,15 @@ h1 {
 }
 
 .type-image {
-  width: 60%;
+  width: 75%;
   height: 100%;
+  object-fit: contain;
   object-position: center;
   transition: transform 0.3s;
-  mix-blend-mode: darken;
+  /* mix-blend-mode removed to fix artifact */
   filter: contrast(1.1);
-   image-rendering: auto;
+  border-radius: 32px;
+  image-rendering: auto;
   image-rendering: smooth;
   image-rendering: high-quality;
   image-rendering: -webkit-optimize-contrast;
@@ -328,11 +322,11 @@ h1 {
   }
   
   .card-inner {
-    min-height: 160px;
+    min-height: 200px;
   }
   
   .image-bg {
-    height: 100px;
+    height: 150px;
   }
 }
 
@@ -343,11 +337,11 @@ h1 {
   }
   
   .card-inner {
-    min-height: 180px;
+    min-height: 220px;
   }
   
   .image-bg {
-    height: 130px;
+    height: 180px;
   }
 }
 </style>

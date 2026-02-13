@@ -115,7 +115,7 @@ export function generateResultEmailHTML(data: any) {
     </div>
 
     <!-- Main Result Card -->
-    <div style="background: white; border-radius: 12px; padding: 25px; margin-bottom: 20px; border-left: 5px solid ${typeColor}; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+    <div style="background: white; border-radius: 12px; padding: 25px; margin-bottom: 20px; border-left: 5px solid ${typeColor}; box-shadow: 0 4px 10px rgba(0,0,0,0.05); page-break-inside: avoid; break-inside: avoid;">
         <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
             <div style="width: 50px; height: 50px; border-radius: 10px; background: ${typeColor}; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: bold;">
                 ${data.dominantType}
@@ -132,7 +132,7 @@ export function generateResultEmailHTML(data: any) {
     </div>
 
     <!-- Scores Section -->
-    <div style="background: white; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+    <div style="background: white; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); page-break-inside: avoid; break-inside: avoid;">
         <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Ihr Stärkenprofil</h3>
         ${scoreBarsHtml}
     </div>
@@ -140,7 +140,7 @@ export function generateResultEmailHTML(data: any) {
     <!-- Analysis Section (Split) -->
     <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
         <!-- Strengths -->
-        <div style="flex: 1; min-width: 250px; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+        <div style="flex: 1; min-width: 250px; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); page-break-inside: avoid; break-inside: avoid;">
             <h4 style="margin-top: 0; color: #28a745;">💪 Ihre Stärken</h4>
             <ul style="padding-left: 20px; margin-bottom: 0;">
                 ${strengthsHtml}
@@ -148,7 +148,7 @@ export function generateResultEmailHTML(data: any) {
         </div>
         
         <!-- Challenges -->
-        <div style="flex: 1; min-width: 250px; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+        <div style="flex: 1; min-width: 250px; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); page-break-inside: avoid; break-inside: avoid;">
             <h4 style="margin-top: 0; color: #dc3545;">🎯 Entwicklungsfelder</h4>
             <ul style="padding-left: 20px; margin-bottom: 0;">
                 ${challengesHtml}
@@ -157,22 +157,22 @@ export function generateResultEmailHTML(data: any) {
     </div>
 
     <!-- Communication Style Section -->
-    <div style="background: ${typeBg}; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+    <div style="background: ${typeBg}; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); page-break-inside: avoid; break-inside: avoid;">
         <h3 style="margin-top: 0; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; color: #1a1a2e; font-size: 18px;">🗣️ Ihr Kommunikationsstil</h3>
         <p style="margin-bottom: 20px; color: #666; font-size: 14px;">So drücken Sie sich aus und so nehmen andere Sie wahr.</p>
         
-        <div style="display: flex; flex-direction: column; gap: 15px;">
-            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+        <div style="display: flex; flex-direction: row; gap: 15px;">
+            <div style="flex: 1; background: white; padding: 15px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
                 <span style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px;">👋 Körpersprache</span>
                 <p style="margin: 0; font-size: 14px; color: #334155; font-weight: 500;">${typeData.communication.bodyLanguage}</p>
             </div>
             
-            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+            <div style="flex: 1; background: white; padding: 15px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
                 <span style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px;">🗣️ Stimme</span>
                 <p style="margin: 0; font-size: 14px; color: #334155; font-weight: 500;">${typeData.communication.voice}</p>
             </div>
             
-            <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
+            <div style="flex: 1; background: white; padding: 15px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05);">
                 <span style="font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px;">✍️ Bevorzugte Worte</span>
                 <p style="margin: 0; font-size: 14px; color: #334155; font-weight: 500;">${typeData.communication.words}</p>
             </div>
@@ -181,7 +181,7 @@ export function generateResultEmailHTML(data: any) {
 
     <!-- Secondary Type -->
     ${secondaryType ? `
-    <div style="background: ${secondaryType.bgColor}; border-radius: 12px; padding: 20px; margin-bottom: 30px; border: 1px solid ${secondaryType.color}40;">
+    <div style="background: ${secondaryType.bgColor}; border-radius: 12px; padding: 20px; margin-bottom: 30px; border: 1px solid ${secondaryType.color}40; page-break-inside: avoid; break-inside: avoid;">
         <h3 style="margin-top: 0; color: #333;">Ihre Sekundärfarbe: ${secondaryType.name}</h3>
         <p style="margin-bottom: 0; color: #555;">${secondaryType.description}</p>
     </div>
@@ -195,7 +195,7 @@ export function generateResultEmailHTML(data: any) {
         </p>
         
         <p style="font-size: 12px; color: #999; margin-top: 20px; text-align: center;">
-            © ${new Date().getFullYear()} Power4-people Kurzanalyse
+            © ${new Date().getFullYear()} power4-people Kurzanalyse
         </p>
     </div>
 

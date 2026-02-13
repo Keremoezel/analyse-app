@@ -255,7 +255,7 @@ function backToTest() {
       <div class="instructions-card">
         <div class="instructions-header">
           <span class="instructions-icon">📋</span>
-          <h1>Anleitung zum Test</h1>
+          <h1>Anleitung Zur Analyse</h1>
         </div>
         
         <div class="instructions-content">
