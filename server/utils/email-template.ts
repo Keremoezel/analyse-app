@@ -193,7 +193,18 @@ export function generateResultEmailHTML(data: any) {
         <p style="font-size: 14px; color: #555; line-height: 1.6; text-align: center;">
             Wenn Sie eine detaillierte Analyse interessiert, Sie Handlungsempfehlungen haben möchten, Ihnen Ihre Motivatoren wichtig sind und Sie Spaß an Informationen zu Ihrem IQ haben, dann kontaktieren Sie uns gerne für eine ausführliche Auswertung.
         </p>
-        
+
+        <!-- CTA Button -->
+        <div style="text-align: center; margin-top: 25px;">
+            <a href="mailto:kurzanalyse@power4-people.de?subject=Interesse%20an%20ausführlicher%20Auswertung"
+               style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); transition: transform 0.2s;">
+                📧 Jetzt Kontakt aufnehmen
+            </a>
+        </div>
+        <p style="font-size: 13px; color: #666; margin-top: 15px; text-align: center;">
+            Oder schreiben Sie uns direkt an: <a href="mailto:kurzanalyse@power4-people.de" style="color: #667eea; text-decoration: none; font-weight: 500;">kurzanalyse@power4-people.de</a>
+        </p>
+
         <p style="font-size: 12px; color: #999; margin-top: 20px; text-align: center;">
             © ${new Date().getFullYear()} power4-people Kurzanalyse
         </p>

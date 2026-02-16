@@ -44,7 +44,15 @@ export default defineEventHandler(async (event) => {
         const user = await db.query.users.findFirst({
             where: eq(schema.users.id, result.userId),
         })
-        const name = user?.email?.split('@')[0] || 'Teilnehmer'
+
+        const emailUsername = user?.email?.split('@')[0] || 'Teilnehmer'
+        const name = emailUsername === 'Teilnehmer'
+            ? 'Teilnehmer'
+            : emailUsername
+                .replace(/\d+/g, '')
+                .split(/[._-]/)
+                .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+                .join(' ')
 
         const scores = {
             D: result.dScore,
@@ -105,7 +113,11 @@ export default defineEventHandler(async (event) => {
         Wir wünschen Ihnen spannende Erkenntnisse beim Lesen!<br>
         Bei Fragen stehen wir Ihnen gerne zur Verfügung.
     </p>
-    
+
+    <p style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-left: 4px solid #667eea; border-radius: 4px;">
+        📧 <strong>Kontakt:</strong> <a href="mailto:kurzanalyse@power4-people.de" style="color: #667eea; text-decoration: none; font-weight: 500;">kurzanalyse@power4-people.de</a>
+    </p>
+
     <p style="margin-top: 30px; font-size: 14px; color: #666;">
         Mit freundlichen Grüßen,<br>
         <strong>Ihr power4-people Team</strong>

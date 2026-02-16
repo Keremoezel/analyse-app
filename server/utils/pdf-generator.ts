@@ -98,6 +98,7 @@ export async function generatePdf(html: string): Promise<Buffer> {
         const pdf = await page.pdf({
             format: 'A4',
             printBackground: true,
+            tagged: true, // Enable tagged PDF for better link support
             margin: {
                 top: '0px',
                 right: '0px',

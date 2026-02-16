@@ -134,61 +134,78 @@ function generateContactEmailHTML(data: any) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light only">
+    <meta name="supported-color-schemes" content="light">
     <title>Neue Kontaktanfrage</title>
+    <style>
+        /* Prevent dark mode */
+        :root {
+            color-scheme: light only;
+            supported-color-schemes: light;
+        }
+        body, div, p, span, a, table, td, th {
+            color-scheme: light only !important;
+        }
+    </style>
 </head>
-<body style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f5f7fa; margin: 0; padding: 40px 20px;">
-    <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); overflow: hidden;">
-        
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #000000; background-color: #ffffff; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #dddddd;">
+
         <!-- Header -->
-        <div style="background: white; padding: 30px 40px; border-bottom: 1px solid #edf2f7; text-align: center;">
-            <h1 style="color: #1a1a2e; margin: 0; font-size: 24px; font-weight: 700;">Neue Kontaktanfrage</h1>
-            <p style="color: #718096; margin: 10px 0 0 0; font-size: 14px;">Eingegangen am ${data.contactData.timestamp}</p>
+        <div style="background-color: #667eea; padding: 30px; text-align: center; color: #ffffff;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 24px;">📬 Neue Kontaktanfrage</h1>
+            <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 14px;">${data.contactData.timestamp}</p>
         </div>
-        
+
         <!-- Content -->
-        <div style="padding: 40px;">
-            <!-- Key Details -->
-            <div style="background: #f8fafc; border-radius: 8px; padding: 25px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
+        <div style="padding: 30px; background-color: #ffffff;">
+
+            <!-- Contact Info -->
+            <div style="background-color: #f5f5f5; padding: 20px; margin-bottom: 20px; border-left: 4px solid #667eea;">
+                <h2 style="color: #000000; margin: 0 0 15px 0; font-size: 18px;">Kontaktinformationen</h2>
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
-                        <td style="padding: 10px 0; font-weight: 600; color: #718096; width: 140px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Name</td>
-                        <td style="padding: 10px 0; font-weight: 500; color: #1a1a2e; font-size: 16px;">${data.contactData.name}</td>
+                        <td style="padding: 8px 0; color: #000000; font-weight: bold; width: 120px;">Name:</td>
+                        <td style="padding: 8px 0; color: #000000;">${data.contactData.name}</td>
                     </tr>
                     <tr>
-                        <td style="padding: 10px 0; font-weight: 600; color: #718096; width: 140px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid #e2e8f0;">E-Mail</td>
-                        <td style="padding: 10px 0; font-weight: 500; font-size: 16px; border-top: 1px solid #e2e8f0;">
-                            <a href="mailto:${data.contactData.email}" style="color: #4a90d9; text-decoration: none;">${data.contactData.email}</a>
+                        <td style="padding: 8px 0; color: #000000; font-weight: bold; border-top: 1px solid #dddddd;">E-Mail:</td>
+                        <td style="padding: 8px 0; border-top: 1px solid #dddddd;">
+                            <a href="mailto:${data.contactData.email}" style="color: #667eea; text-decoration: underline;">${data.contactData.email}</a>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding: 10px 0; font-weight: 600; color: #718096; width: 140px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid #e2e8f0;">Telefon</td>
-                        <td style="padding: 10px 0; font-weight: 500; color: #1a1a2e; font-size: 16px; border-top: 1px solid #e2e8f0;">${data.contactData.phone}</td>
+                        <td style="padding: 8px 0; color: #000000; font-weight: bold; border-top: 1px solid #dddddd;">Telefon:</td>
+                        <td style="padding: 8px 0; color: #000000; border-top: 1px solid #dddddd;">
+                            ${data.contactData.phone !== 'Nicht angegeben' ? `<a href="tel:${data.contactData.phone}" style="color: #000000; text-decoration: underline;">${data.contactData.phone}</a>` : data.contactData.phone}
+                        </td>
                     </tr>
                     <tr>
-                        <td style="padding: 10px 0; font-weight: 600; color: #718096; width: 140px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border-top: 1px solid #e2e8f0;">Erreichbarkeit</td>
-                        <td style="padding: 10px 0; font-weight: 500; color: #1a1a2e; font-size: 16px; border-top: 1px solid #e2e8f0;">${data.contactData.availability}</td>
+                        <td style="padding: 8px 0; color: #000000; font-weight: bold; border-top: 1px solid #dddddd;">Erreichbar:</td>
+                        <td style="padding: 8px 0; color: #000000; border-top: 1px solid #dddddd;">${data.contactData.availability}</td>
                     </tr>
                 </table>
             </div>
 
             <!-- Message -->
-            <div>
-                <h3 style="margin-top: 0; color: #2d3748; font-size: 18px; font-weight: 600; margin-bottom: 15px;">Nachricht</h3>
-                <div style="color: #4a5568; white-space: pre-wrap; line-height: 1.7; font-size: 15px;">${data.contactData.message}</div>
+            <div style="margin-bottom: 25px;">
+                <h3 style="color: #000000; margin: 0 0 10px 0; font-size: 16px;">Nachricht:</h3>
+                <div style="color: #000000; white-space: pre-wrap; line-height: 1.6; padding: 15px; background-color: #f5f5f5; border-left: 4px solid #667eea;">${data.contactData.message}</div>
             </div>
 
-            <!-- Action Button -->
-            <div style="text-align: center; margin-top: 40px;">
-                <a href="mailto:${data.replyTo}" style="display: inline-block; background-color: #4a90d9; color: white; padding: 14px 35px; text-decoration: none; border-radius: 6px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 6px rgba(74, 144, 217, 0.25); transition: background-color 0.2s;">
-                    Antworten
+            <!-- Reply Button -->
+            <div style="text-align: center; padding: 20px; background-color: #f9f9f9; border: 2px solid #667eea;">
+                <a href="mailto:${data.contactData.email}?subject=Re:%20Ihre%20Anfrage%20bei%20power4-people&body=Hallo%20${encodeURIComponent(data.contactData.name)}%2C%0A%0A"
+                   style="display: inline-block; background-color: #667eea; color: #ffffff; padding: 15px 40px; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold;">
+                    JETZT ANTWORTEN
                 </a>
             </div>
         </div>
-        
+
         <!-- Footer -->
-        <div style="background: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #edf2f7;">
-            <p style="font-size: 13px; color: #a0aec0; margin: 0; font-weight: 500;">
-                power4-people Kurzanalyse
+        <div style="background-color: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #dddddd;">
+            <p style="font-size: 12px; color: #666666; margin: 0;">
+                © ${new Date().getFullYear()} power4-people Kurzanalyse
             </p>
         </div>
     </div>
