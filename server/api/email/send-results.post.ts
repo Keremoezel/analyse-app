@@ -3,10 +3,12 @@ import { eq } from 'drizzle-orm'
 import { Resend } from 'resend'
 import { typeDescriptions, generateResultEmailHTML } from '../../utils/email-template'
 import { generatePdf } from '../../utils/pdf-generator'
+import { getEmailSignatureHTML } from '../../utils/email-signature'
 
 interface SendResultsEmailBody {
     resultId: string // UUID slug
     email: string
+    name: string
 }
 
 export default defineEventHandler(async (event) => {
@@ -45,14 +47,7 @@ export default defineEventHandler(async (event) => {
             where: eq(schema.users.id, result.userId),
         })
 
-        const emailUsername = user?.email?.split('@')[0] || 'Teilnehmer'
-        const name = emailUsername === 'Teilnehmer'
-            ? 'Teilnehmer'
-            : emailUsername
-                .replace(/\d+/g, '')
-                .split(/[._-]/)
-                .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-                .join(' ')
+        const name = body.name || 'Teilnehmer'
 
         const scores = {
             D: result.dScore,
@@ -118,10 +113,17 @@ export default defineEventHandler(async (event) => {
         📧 <strong>Kontakt:</strong> <a href="mailto:kurzanalyse@power4-people.de" style="color: #667eea; text-decoration: none; font-weight: 500;">kurzanalyse@power4-people.de</a>
     </p>
 
-    <p style="margin-top: 30px; font-size: 14px; color: #666;">
-        Mit freundlichen Grüßen,<br>
-        <strong>Ihr power4-people Team</strong>
-    </p>
+    <div style="margin-top: 25px; text-align: center;">
+        <p style="font-size: 15px; color: #333; margin-bottom: 12px;">
+            <strong>Möchten Sie mehr über die detaillierte Analyse erfahren?</strong>
+        </p>
+        <a href="https://outlook.office.com/bookwithme/user/0b454bd6639f491aba5ec10b9ccd324f%40power4-group.de?anonymous&ismsaljsauthenabled" 
+           style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #667eea, #5a6fd6); color: #ffffff; text-decoration: none; border-radius: 8px; font-size: 15px; font-weight: 600; letter-spacing: 0.3px;">
+            📅 Jetzt Termin vereinbaren
+        </a>
+    </div>
+
+    ${getEmailSignatureHTML()}
 </body>
 </html>
         `.trim()

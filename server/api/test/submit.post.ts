@@ -9,6 +9,7 @@ interface AnswerItem {
 
 interface SubmitBody {
     email: string
+    name: string
     answers: AnswerItem[]
     code: string // Verification code
 }
@@ -135,6 +136,7 @@ export default defineEventHandler(async (event) => {
             body: {
                 resultId: slug,
                 email: body.email,
+                name: body.name,
             },
         })
     } catch (error) {

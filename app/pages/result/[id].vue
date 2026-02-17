@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import confetti from 'canvas-confetti'
 const route = useRoute()
 const resultId = route.params.id
 
@@ -18,6 +19,96 @@ const contactMethods = ['Anruf', 'Email']
 const selectedMethod = ref('Email') // Default to Email
 
 const { data: result, error } = await useFetch<ResultData>(`/api/results/${resultId}`)
+
+// Voucher Logic
+const voucherTimer = ref(300) // 5 minutes in seconds
+const showVoucher = ref(true)
+const hasVoucher = ref(false)
+const voucherCode = ref('')
+
+function generateVoucherCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' // Removed confusing chars like I, 1, O, 0
+  let code = ''
+  for (let i = 0; i < 16; i++) {
+    if (i > 0 && i % 4 === 0) code += '-'
+    code += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return code
+}
+
+onMounted(() => {
+  const STORAGE_KEY = `voucher-end-time-${resultId}`
+  const DURATION_SECONDS = 300 // 5 minutes
+
+  const stored = localStorage.getItem(STORAGE_KEY)
+
+  // If already expired, hide voucher permanently
+  if (stored === 'expired') {
+    showVoucher.value = false
+    return
+  }
+
+  let endTime = parseInt(stored || '0')
+
+  if (!endTime) {
+    endTime = Date.now() + DURATION_SECONDS * 1000
+    localStorage.setItem(STORAGE_KEY, endTime.toString())
+  }
+
+  const updateTimer = () => {
+    const now = Date.now()
+    const remaining = Math.ceil((endTime - now) / 1000)
+
+    if (remaining > 0) {
+      voucherTimer.value = remaining
+    } else {
+      voucherTimer.value = 0
+      showVoucher.value = false
+      localStorage.setItem(STORAGE_KEY, 'expired')
+      clearInterval(interval)
+    }
+  }
+
+  updateTimer()
+
+  const interval = setInterval(updateTimer, 1000)
+  onUnmounted(() => clearInterval(interval))
+})
+
+const formattedVoucherTime = computed(() => {
+  const minutes = Math.floor(voucherTimer.value / 60)
+  const seconds = voucherTimer.value % 60
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`
+})
+
+function triggerConfetti() {
+  const duration = 3 * 1000
+  const animationEnd = Date.now() + duration
+  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 2000 }
+
+  const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min
+
+  const interval: any = setInterval(function() {
+    const timeLeft = animationEnd - Date.now()
+
+    if (timeLeft <= 0) {
+      return clearInterval(interval)
+    }
+
+    const particleCount = 50 * (timeLeft / duration)
+    
+    confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } })
+    confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } })
+  }, 250)
+}
+
+function secureVoucher() {
+  hasVoucher.value = true
+  voucherCode.value = generateVoucherCode()
+  contactForm.value.voucherCode = voucherCode.value
+  triggerConfetti()
+  openContactModal()
+}
 
 // DISG type descriptions
 const typeDescriptions = {
@@ -103,17 +194,28 @@ const quadrantPosition = computed(() => {
   if (!result.value) return { x: 50, y: 50 }
   const { D, I, S, G } = result.value.scores
   
+  // Use fixed scale based on max points (40) to spread out the dots better
+  // Instead of ratio, we use the deviation from center
+  const MAX_SCALE = 40
+  
   // X axis: Introvertiert (Blau+Grün) vs Extrovertiert (Rot+Gelb)
   // Left = Introvertiert, Right = Extrovertiert
   const introvert = G + S
   const extrovert = D + I
-  const x = (extrovert / (introvert + extrovert)) * 100
+  // Map difference to percentage. 0 diff = 50%. Max diff (+40) = 100%. Min diff (-40) = 0%.
+  let x = 50 + ((extrovert - introvert) / MAX_SCALE) * 50
   
   // Y axis: Kopfmensch (Blau+Rot) vs Bauchmensch (Grün+Gelb)
   // Top = Kopfmensch, Bottom = Bauchmensch
   const kopfmensch = G + D
   const bauchmensch = S + I
-  const y = 100 - (kopfmensch / (kopfmensch + bauchmensch)) * 100
+  // Map difference to percentage. Kopf is Top (0%), Bauch is Bottom (100%).
+  // If Kopf > Bauch (Positive diff), we move UP (Subtract from 50).
+  let y = 50 - ((kopfmensch - bauchmensch) / MAX_SCALE) * 50
+  
+  // Clamp values to keep dot within the box (5% - 95%)
+  x = Math.max(5, Math.min(95, x))
+  y = Math.max(5, Math.min(95, y))
   
   return { x, y }
 })
@@ -135,11 +237,21 @@ const contactForm = ref({
   availability: '',
   message: '',
   privacyAccepted: false,
-  sendCopy: false
+  sendCopy: false,
+  voucherCode: ''
 })
 const isSubmittingContact = ref(false)
 const contactError = ref('')
 const contactSuccess = ref(false)
+
+const isFormReady = computed(() => {
+  const f = contactForm.value
+  const hasName = f.name.trim().length > 0
+  const hasEmail = f.email.includes('@')
+  const hasPrivacy = f.privacyAccepted
+  const hasPhone = selectedMethod.value === 'Anruf' ? (f.phone?.trim().length ?? 0) > 0 : true
+  return hasName && hasEmail && hasPrivacy && hasPhone
+})
 
 function openContactModal() {
   showContactModal.value = true
@@ -156,7 +268,8 @@ function closeContactModal() {
     availability: '', 
     message: '',
     privacyAccepted: false,
-    sendCopy: false
+    sendCopy: false,
+    voucherCode: ''
   }
   contactError.value = ''
   contactSuccess.value = false
@@ -210,14 +323,16 @@ async function submitContactForm() {
         availability: selectedMethod.value === 'Anruf' ? contactForm.value.availability : undefined,
         message: contactForm.value.message,
         sendCopy: contactForm.value.sendCopy,
-        resultId: parseInt(route.params.id as string) // Link contact to result for analytics
+        resultId: parseInt(route.params.id as string), // Link contact to result for analytics
+        hasVoucher: hasVoucher.value, // Pass voucher status
+        voucherCode: hasVoucher.value ? voucherCode.value : undefined // Pass voucher code
       },
     })
     
     contactSuccess.value = true
     setTimeout(() => {
       closeContactModal()
-    }, 2000)
+    }, 5000)
   } catch (e: any) {
     contactError.value = e.data?.message || 'Ein Fehler ist aufgetreten'
   } finally {
@@ -248,6 +363,12 @@ function printPage() {
         </div>
         <h1>Ihr Analyse-Profil</h1>
         <p class="subtitle">Persönlichkeitsanalyse für {{ result.email }}</p>
+        <div class="type-legend">
+          <span class="legend-item"><span class="legend-dot" style="background: #dc3545;"></span>Rot = Dominant</span>
+          <span class="legend-item"><span class="legend-dot" style="background: #facc15;"></span>Gelb = Initiativ</span>
+          <span class="legend-item"><span class="legend-dot" style="background: #22c55e;"></span>Grün = Stetig</span>
+          <span class="legend-item"><span class="legend-dot" style="background: #3b82f6;"></span>Blau = Gewissenhaft</span>
+        </div>
       </header>
 
       <!-- Main Result Card with watermark -->
@@ -422,6 +543,23 @@ function printPage() {
         <p>{{ typeDescriptions[secondaryType].description }}</p>
       </div>
 
+      <!-- Voucher Section -->
+      <div v-if="showVoucher" class="voucher-section">
+        <div class="voucher-content">
+          <div class="voucher-icon">🎁</div>
+          <div class="voucher-text">
+            <h3>Gutschein sichern für deine persönliche Analyse</h3>
+            <p>Nur noch für kurze Zeit verfügbar!</p>
+          </div>
+          <div class="voucher-timer">
+            {{ formattedVoucherTime }}
+          </div>
+        </div>
+        <button @click="secureVoucher" class="voucher-btn">
+          Gutschein jetzt sichern
+        </button>
+      </div>
+
       <!-- Detailed Analysis CTA -->
       <div class="detailed-analysis-section">
         <h3>🎯 Möchten Sie mehr erfahren?</h3>
@@ -436,6 +574,9 @@ function printPage() {
           <button @click="openContactModal" class="cta-btn contact-btn">
             ℹ️ Ich will weitere Informationen
           </button>
+          <a href="https://outlook.office.com/bookwithme/user/0b454bd6639f491aba5ec10b9ccd324f%40power4-group.de?anonymous&ismsaljsauthenabled" target="_blank" rel="noopener" class="cta-btn booking-btn">
+            📅 Termin vereinbaren
+          </a>
         </div>
       </div>
 
@@ -445,11 +586,22 @@ function printPage() {
           <button class="modal-close" @click="closeContactModal">✕</button>
           
           <div class="modal-header">
-            <h3>📬 Kontaktformular</h3>
-            <p>Füllen Sie das Formular aus und wir melden uns bei Ihnen!</p>
+            <h3 v-if="hasVoucher">🎉 Gutschein Einlösen</h3>
+            <h3 v-else>📬 Kontaktformular</h3>
+            <p v-if="hasVoucher">Senden Sie uns Ihre Anfrage, um Ihren Gutschein zu aktivieren.</p>
+            <p v-else>Füllen Sie das Formular aus und wir melden uns bei Ihnen!</p>
           </div>
           
           <form @submit.prevent="submitContactForm" class="contact-form">
+            <!-- Voucher Code Display -->
+            <div v-if="hasVoucher" class="form-group voucher-code-display">
+              <label>Ihr Gutscheincode</label>
+              <div class="code-box">
+                {{ voucherCode }}
+              </div>
+              <p class="code-note">Dieser Code wird automatisch mit Ihrer Anfrage gesendet.</p>
+            </div>
+
             <div class="form-group">
               <label for="contact-name">Name *</label>
               <input 
@@ -458,6 +610,7 @@ function printPage() {
                 type="text" 
                 placeholder="Ihr vollständiger Name"
                 required
+                :disabled="isSubmittingContact || contactSuccess"
               >
             </div>
             
@@ -469,6 +622,7 @@ function printPage() {
                 type="email" 
                 placeholder="ihre.email@beispiel.de"
                 required
+                :disabled="isSubmittingContact || contactSuccess"
               >
             </div>
             
@@ -480,6 +634,7 @@ function printPage() {
                 type="tel" 
                 placeholder="+49 123 456789"
                 :required="selectedMethod === 'Anruf'"
+                :disabled="isSubmittingContact || contactSuccess"
               >
             </div>
             
@@ -492,6 +647,7 @@ function printPage() {
                       name="contactMethod" 
                       value="Email" 
                       v-model="selectedMethod"
+                      :disabled="isSubmittingContact || contactSuccess"
                     >
                     Email
                   </label>
@@ -501,6 +657,7 @@ function printPage() {
                       name="contactMethod" 
                       value="Anruf" 
                       v-model="selectedMethod"
+                      :disabled="isSubmittingContact || contactSuccess"
                     >
                     Anruf
                   </label>
@@ -514,6 +671,7 @@ function printPage() {
                 v-model="contactForm.availability" 
                 type="text" 
                 placeholder="z.B. Wochentags 14-16 Uhr"
+                :disabled="isSubmittingContact || contactSuccess"
               >
             </div> 
             
@@ -524,6 +682,7 @@ function printPage() {
                 v-model="contactForm.message" 
                 rows="4"
                 placeholder="Was interessiert Sie am meisten"
+                :disabled="isSubmittingContact || contactSuccess"
               ></textarea>
             </div>
             
@@ -532,7 +691,7 @@ function printPage() {
             
             <div class="form-group">
                <label class="privacy-label">
-                  <input type="checkbox" v-model="contactForm.sendCopy">
+                  <input type="checkbox" v-model="contactForm.sendCopy" :disabled="isSubmittingContact || contactSuccess">
                   <span>
                     Ich möchte eine Kopie meiner Anfrage als PDF per E-Mail erhalten.
                   </span>
@@ -541,7 +700,7 @@ function printPage() {
 
             <div class="form-group">
                <label class="privacy-label">
-                  <input type="checkbox" v-model="contactForm.privacyAccepted" required>
+                  <input type="checkbox" v-model="contactForm.privacyAccepted" required :disabled="isSubmittingContact || contactSuccess">
                   <span>
                     Ich habe die <NuxtLink to="/datenschutz" target="_blank" class="text-link">Datenschutzerklärung</NuxtLink> gelesen und akzeptiere sie.
                   </span>
@@ -550,8 +709,8 @@ function printPage() {
 
             <div class="form-actions">
               <button type="button" @click="closeContactModal" class="btn-cancel">Abbrechen</button>
-              <button type="submit" :disabled="isSubmittingContact" class="btn-submit">
-                {{ isSubmittingContact ? 'Wird gesendet...' : 'Absenden' }}
+              <button type="submit" :disabled="isSubmittingContact || contactSuccess" class="btn-submit" :style="{ background: isFormReady ? 'linear-gradient(135deg, #28a745 0%, #20963d 100%)' : '#81c784' }">
+                {{ isSubmittingContact ? 'Wird gesendet...' : (contactSuccess ? 'Gesendet!' : 'Absenden') }}
               </button>
             </div>
           </form>
@@ -613,6 +772,30 @@ function printPage() {
 .subtitle {
   color: #666;
   font-size: 1rem;
+}
+
+.type-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
 }
 
 /* Main Result Card with watermark */
@@ -1107,6 +1290,19 @@ function printPage() {
   background: linear-gradient(135deg, #20963d 0%, #1e7e34 100%);
 }
 
+.booking-btn {
+  background: linear-gradient(135deg, #667eea 0%, #5a6fd6 100%);
+  color: white;
+  border: 2px solid #5a6fd6;
+  cursor: pointer;
+}
+
+.booking-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+  background: linear-gradient(135deg, #5a6fd6 0%, #4c5ec2 100%);
+}
+
 .cta-note {
   text-align: center;
   color: #6c757d;
@@ -1256,13 +1452,14 @@ function printPage() {
 
 .success-message {
   color: #28a745;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   margin: 0;
-  padding: 0.5rem;
+  padding: 1rem;
   background: #f0fdf4;
-  border-radius: 6px;
+  border-radius: 8px;
   text-align: center;
-  font-weight: 600;
+  font-weight: 700;
+  border: 1px solid #bdf5bd;
 }
 
 .form-actions {
@@ -1299,7 +1496,7 @@ function printPage() {
 }
 
 .btn-submit {
-  background: linear-gradient(135deg, #28a745 0%, #20963d 100%);
+  background: #81c784;
   color: white;
 }
 
@@ -1596,6 +1793,125 @@ function printPage() {
 
 .comm-card:hover {
   transform: translateY(-3px);
+}
+
+.voucher-code-display {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px dashed #ced4da;
+  text-align: center;
+}
+
+.code-box {
+  font-family: monospace;
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: #28a745;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+}
+
+.code-note {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+/* Voucher Section */
+.voucher-section {
+  background: linear-gradient(135deg, #FF6B6B 0%, #EE5253 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(238, 82, 83, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  animation: pulse-border 2s infinite;
+}
+
+@media (min-width: 600px) {
+  .voucher-section {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    padding: 2rem;
+  }
+  
+  .voucher-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
+
+.voucher-icon {
+  font-size: 3rem;
+  animation: bounce 2s infinite;
+}
+
+.voucher-text h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+  color: white;
+}
+
+.voucher-text p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 1rem;
+}
+
+.voucher-timer {
+  font-family: monospace;
+  font-size: 2rem;
+  font-weight: bold;
+  background: rgba(0,0,0,0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  min-width: 120px;
+  text-align: center;
+}
+
+.voucher-btn {
+  background: white;
+  color: #EE5253;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  white-space: nowrap;
+}
+
+.voucher-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+@keyframes pulse-border {
+  0% { box-shadow: 0 0 0 0 rgba(238, 82, 83, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(238, 82, 83, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(238, 82, 83, 0); }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+  40% {transform: translateY(-10px);}
+  60% {transform: translateY(-5px);}
 }
 
 .comm-icon {

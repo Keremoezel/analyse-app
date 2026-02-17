@@ -1,5 +1,6 @@
 import { db, schema } from '../../db'
 import { Resend } from 'resend'
+import { getEmailSignatureHTML } from '../../utils/email-signature'
 
 interface SendCodeBody {
     email: string
@@ -52,6 +53,7 @@ export default defineEventHandler(async (event) => {
                         Falls Sie diese Anfrage nicht gestellt haben, können Sie diese E-Mail einfach ignorieren.
                         Bitte diese E-Mailadresse nicht antworten.
                     </p>
+                    ${getEmailSignatureHTML()}
                 </div>
             `,
         })

@@ -111,7 +111,21 @@ export function generateResultEmailHTML(data: any) {
             ${typeData.icon}
         </div>
         <h1 style="color: #1a1a2e; margin: 0 0 5px;">Ihr Analyse-Profil</h1>
-        <p style="color: #666; margin: 0;">Hier ist Ihre persönliche Auswertung</p>
+        <p style="color: #666; margin: 0 0 12px;">Hier ist Ihre persönliche Auswertung</p>
+        <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+            <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: #555;">
+                <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #dc3545;"></span>Rot = Dominant
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: #555;">
+                <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #facc15;"></span>Gelb = Initiativ
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: #555;">
+                <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #22c55e;"></span>Grün = Stetig
+            </span>
+            <span style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: #555;">
+                <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #3b82f6;"></span>Blau = Gewissenhaft
+            </span>
+        </div>
     </div>
 
     <!-- Main Result Card -->

@@ -1,6 +1,7 @@
 import { Resend } from 'resend'
 import { db, schema } from '../../db'
 import { eq } from 'drizzle-orm'
+import { getEmailSignatureHTML } from '../../utils/email-signature'
 
 interface SendContactEmailBody {
     name: string
@@ -10,6 +11,8 @@ interface SendContactEmailBody {
     message: string
     sendCopy?: boolean
     resultId?: number // For tracking analytics
+    hasVoucher?: boolean
+    voucherCode?: string
 }
 
 export default defineEventHandler(async (event) => {
@@ -41,13 +44,15 @@ export default defineEventHandler(async (event) => {
             availability: body.availability || 'Nicht angegeben',
             message: body.message || 'Keine Nachricht',
             timestamp: new Date().toLocaleString('de-DE'),
+            hasVoucher: body.hasVoucher || false,
+            voucherCode: body.voucherCode
         }
 
         const adminEmailData = {
             to: config.emailAdminRecipient || 'admin@yourdomain.com',
             from: config.emailFromSupport || 'support@yourdomain.com',
             replyTo: body.email, // Allow admin to reply directly to user
-            subject: `Neue Kontaktanfrage von ${body.name}`,
+            subject: body.hasVoucher ? `🎫 GUTSCHEIN (${body.voucherCode}) - Neue Kontaktanfrage von ${body.name}` : `Neue Kontaktanfrage von ${body.name}`,
             contactData: contactData,
         }
 
@@ -80,9 +85,7 @@ export default defineEventHandler(async (event) => {
                             <p>Hallo ${body.name},</p>
                             <p>wir haben Ihre Nachricht erhalten und werden uns in Kürze bei Ihnen melden.</p>
                             <p>Im Anhang finden Sie eine Kopie Ihrer Anfrage als PDF-Dokument.</p>
-                            <br>
-                            <p>Mit freundlichen Grüßen,</p>
-                            <p><strong>power4-people Team</strong></p>
+                            ${getEmailSignatureHTML()}
                         </div>
                     `,
                     attachments: [
@@ -153,6 +156,7 @@ function generateContactEmailHTML(data: any) {
 
         <!-- Header -->
         <div style="background-color: #667eea; padding: 30px; text-align: center; color: #ffffff;">
+            ${data.contactData.hasVoucher ? `<div style="background-color: #ffd700; color: #000; display: inline-block; padding: 5px 15px; border-radius: 20px; font-weight: bold; margin-bottom: 10px;">🎫 GUTSCHEIN: ${data.contactData.voucherCode}</div>` : ''}
             <h1 style="color: #ffffff; margin: 0; font-size: 24px;">📬 Neue Kontaktanfrage</h1>
             <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 14px;">${data.contactData.timestamp}</p>
         </div>
@@ -203,8 +207,9 @@ function generateContactEmailHTML(data: any) {
         </div>
 
         <!-- Footer -->
-        <div style="background-color: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #dddddd;">
-            <p style="font-size: 12px; color: #666666; margin: 0;">
+        <div style="background-color: #f5f5f5; padding: 20px; border-top: 1px solid #dddddd;">
+            ${getEmailSignatureHTML()}
+            <p style="font-size: 12px; color: #666666; margin: 15px 0 0 0; text-align: center;">
                 © ${new Date().getFullYear()} power4-people Kurzanalyse
             </p>
         </div>
@@ -263,6 +268,13 @@ function generateContactPdfHTML(data: any) {
                 <td class="label">Datum:</td>
                 <td>${data.timestamp}</td>
             </tr>
+
+            ${data.hasVoucher ? `
+            <tr>
+                <td class="label">Gutschein:</td>
+                <td style="color: #28a745; font-weight: bold;">Ja, Code: ${data.voucherCode}</td>
+            </tr>
+            ` : ''}
         </table>
     </div>
 

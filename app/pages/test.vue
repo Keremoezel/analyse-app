@@ -21,6 +21,7 @@ const error = ref('')
 const showEmailForm = ref(false) // Show email form after completing test
 const showVerificationForm = ref(false) // Show verification code form
 const email = ref('')
+const userName = ref('')
 const verificationCode = ref('')
 const isShowingInstructions = ref(true) // Show instructions first
 const testStarted = ref(false) // Track if test has started
@@ -211,6 +212,7 @@ async function verifyAndSubmit() {
         method: 'POST',
         body: {
           email: email.value,
+          name: userName.value,
           answers: answerArray,
           code: verificationCode.value
         },
@@ -278,7 +280,7 @@ function backToTest() {
                 <li><span class="score-badge">4</span> Punkte = Passt am besten zu mir</li>
                 <li><span class="score-badge">3</span> Punkte = Passt gut zu mir</li>
                 <li><span class="score-badge">2</span> Punkte = Passt weniger zu mir</li>
-                <li><span class="score-badge">1</span> Punkte = Passt am wenigsten zu mir</li>
+                <li><span class="score-badge">1</span> Punkt = Passt am wenigsten zu mir</li>
               </ul>
             </div>
           </div>
@@ -287,7 +289,7 @@ function backToTest() {
             <span class="step-number">3</span>
             <div class="step-content">
               <strong>Jede Punktzahl kann nur einmal bei einer Frage vergeben werden</strong>
-              <p>Verteilen Sie alle vier Punkte (1, 2, 3, 4) auf die vier Begriffe – keine Doppelvergabe!</p>
+              <p>Verteilen Sie die jeweiligen Punkte auf die 4 Begriffe. Eine Doppelvergabe gleicher Punktzahl ist nicht möglich.</p>
             </div>
           </div>
           
@@ -337,18 +339,32 @@ function backToTest() {
       <div class="email-card">
         <div class="email-header">
           <span class="check-icon">✅</span>
-          <h2>Test abgeschlossen!</h2>
+          <h2>Analyse abgeschlossen!</h2>
           <p>Geben Sie Ihre E-Mail-Adresse ein, um Ihr persönliche Analyse zu erhalten.</p>
         </div>
         
         <form @submit.prevent="submitTest" class="email-form">
-          <input 
-            v-model="email" 
-            type="email" 
-            placeholder="ihre.email@beispiel.de"
-            required
-            autofocus
-          >
+          <div class="form-field">
+            <label for="user-name" class="field-label">Wie sollen wir Sie ansprechen?</label>
+            <input 
+              id="user-name"
+              v-model="userName" 
+              type="text" 
+              placeholder="Ihr Name"
+              required
+              autofocus
+            >
+          </div>
+          <div class="form-field">
+            <label for="user-email" class="field-label">E-Mail-Adresse</label>
+            <input 
+              id="user-email"
+              v-model="email" 
+              type="email" 
+              placeholder="ihre.email@beispiel.de"
+              required
+            >
+          </div>
           <p v-if="error" class="error">{{ error }}</p>
           
           <div class="email-actions">
@@ -428,7 +444,7 @@ function backToTest() {
         </div>
       </div>
       
-      <p class="quick-reminder">
+      <p class="quick-reminder" style="font-weight: 900; font-size: 1.0em; line-height: 1.4; color: black !important;">
         Vergeben Sie die Punkte 1-4 (4 = passt am besten, 1 = passt am wenigsten).
       </p>
       
@@ -753,6 +769,19 @@ function backToTest() {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: left;
+}
+
+.field-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
 }
 
 .email-form input {
