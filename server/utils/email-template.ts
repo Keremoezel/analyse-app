@@ -208,11 +208,17 @@ export function generateResultEmailHTML(data: any) {
             Wenn Sie eine detaillierte Analyse interessiert, Sie Handlungsempfehlungen haben möchten, Ihnen Ihre Motivatoren wichtig sind und Sie Spaß an Informationen zu Ihrem IQ haben, dann kontaktieren Sie uns gerne für eine ausführliche Auswertung.
         </p>
 
-        <!-- CTA Button -->
+        <!-- CTA Buttons -->
         <div style="text-align: center; margin-top: 25px;">
             <a href="mailto:kurzanalyse@power4-people.de?subject=Interesse%20an%20ausführlicher%20Auswertung"
-               style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); transition: transform 0.2s;">
+               style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
                 📧 Jetzt Kontakt aufnehmen
+            </a>
+        </div>
+        <div style="text-align: center; margin-top: 12px;">
+            <a href="https://outlook.office.com/bookwithme/user/0b454bd6639f491aba5ec10b9ccd324f%40power4-group.de?anonymous&ismsaljsauthenabled"
+               style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #5a6fd6 100%); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+                📅 Termin vereinbaren
             </a>
         </div>
         <p style="font-size: 13px; color: #666; margin-top: 15px; text-align: center;">
