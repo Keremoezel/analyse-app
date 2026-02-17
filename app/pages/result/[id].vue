@@ -103,10 +103,12 @@ function triggerConfetti() {
 }
 
 function secureVoucher() {
-  hasVoucher.value = true
-  voucherCode.value = generateVoucherCode()
-  contactForm.value.voucherCode = voucherCode.value
-  triggerConfetti()
+  if (!hasVoucher.value) {
+    hasVoucher.value = true
+    voucherCode.value = generateVoucherCode()
+    contactForm.value.voucherCode = voucherCode.value
+    triggerConfetti()
+  }
   openContactModal()
 }
 
