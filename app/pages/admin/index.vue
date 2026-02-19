@@ -23,10 +23,22 @@ interface ResultsResponse {
     meta: Meta
 }
 
+interface TypeDistribution {
+    D: number
+    I: number
+    S: number
+    G: number
+    counts: { D: number, I: number, S: number, G: number }
+}
+
 interface Stats {
     totalTests: number
+    totalAllTime: number
     conversionRate: number
+    testsThisWeek: number
+    testsLastWeek: number
     dailyStats: Array<{ date: string, count: number }>
+    typeDistribution: TypeDistribution
 }
 
 definePageMeta({
@@ -92,47 +104,18 @@ function getDayName(dateStr: string) {
     return new Date(dateStr).toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric' })
 }
 
-// Fill missing days in stats for better chart (30 days)
+// Daily stats
 const filledDailyStats = computed(() => {
     return stats.value?.dailyStats || []
 })
-// Chart Logic
-const chartPoints = computed(() => {
+
+// Bar chart helper
+function getBarHeight(count: number) {
     const data = filledDailyStats.value
-    if (data.length === 0) return []
-    
-    const maxVal = Math.max(...data.map(d => d.count), 5) // Min scale of 5
-    const width = 1000
-    const height = 200
-    const padding = 10
-    
-    return data.map((d, i) => {
-        const x = data.length > 1 ? (i / (data.length - 1)) * width : width / 2
-        // Invert Y because SVG 0 is top
-        const y = height - ((d.count / maxVal) * (height - padding))
-        return { x, y, count: d.count, date: d.date }
-    })
-})
-
-const chartLinePath = computed(() => {
-    const points = chartPoints.value
-    if (points.length === 0) return ''
-    
-    return points.map((p, i) => 
-        (i === 0 ? 'M' : 'L') + `${p.x},${p.y}`
-    ).join(' ')
-})
-
-const chartAreaPath = computed(() => {
-    const points = chartPoints.value
-    if (points.length === 0) return ''
-    
-    const line = chartLinePath.value
-    const lastPoint = points[points.length - 1]
-    const lastX = lastPoint ? lastPoint.x : 0
-    
-    return `${line} L${lastX},200 L0,200 Z`
-})
+    if (data.length === 0) return 0
+    const maxVal = Math.max(...data.map(d => d.count), 1)
+    return Math.max((count / maxVal) * 100, 4) // min 4% so zero-bars are visible
+}
 
 </script>
 
@@ -153,58 +136,85 @@ const chartAreaPath = computed(() => {
         <div class="stat-card">
           <div class="stat-label">Tests (30 Tage)</div>
           <div class="stat-value">{{ stats.totalTests }}</div>
-          <div class="stat-trend" :class="{ up: stats.totalTests > 0 }">
-            {{ stats.totalTests > 0 ? '📈 Aktiv' : 'Keine Daten' }}
+          <div class="stat-sub">Gesamt: {{ stats.totalAllTime }}</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Kontakt-Rate (30 Tage)</div>
+          <div class="stat-value">{{ stats.conversionRate }}%</div>
+          <div class="stat-sub">haben Kontakt aufgenommen</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Diese Woche</div>
+          <div class="stat-value">{{ stats.testsThisWeek }}</div>
+          <div class="stat-trend" :class="{ up: stats.testsThisWeek > stats.testsLastWeek, down: stats.testsThisWeek < stats.testsLastWeek }">
+            <template v-if="stats.testsLastWeek === 0 && stats.testsThisWeek > 0">
+              Neu aktiv
+            </template>
+            <template v-else-if="stats.testsThisWeek > stats.testsLastWeek">
+              +{{ stats.testsThisWeek - stats.testsLastWeek }} vs. letzte Woche
+            </template>
+            <template v-else-if="stats.testsThisWeek < stats.testsLastWeek">
+              {{ stats.testsThisWeek - stats.testsLastWeek }} vs. letzte Woche
+            </template>
+            <template v-else>
+              Gleich wie letzte Woche
+            </template>
           </div>
         </div>
 
         <div class="stat-card">
-          <div class="stat-label">Kontakt-Rate</div>
-          <div class="stat-value">{{ stats.conversionRate }}%</div>
-          <div class="stat-sub">der Nutzer fragen an</div>
+          <div class="stat-label">Analyse-Verteilung</div>
+          <div class="type-distribution">
+            <div class="type-bar-row">
+              <span class="type-label type-d-label">R</span>
+              <div class="type-bar-track">
+                <div class="type-bar type-bar-d" :style="{ width: stats.typeDistribution.D + '%' }"></div>
+              </div>
+              <span class="type-percent">{{ stats.typeDistribution.D }}%</span>
+            </div>
+            <div class="type-bar-row">
+              <span class="type-label type-i-label">G</span>
+              <div class="type-bar-track">
+                <div class="type-bar type-bar-i" :style="{ width: stats.typeDistribution.I + '%', backgroundColor: 'yellow' }"></div>
+              </div>
+              <span class="type-percent">{{ stats.typeDistribution.I }}%</span>
+            </div>
+            <div class="type-bar-row">
+              <span class="type-label type-s-label">G</span>
+              <div class="type-bar-track">
+                <div class="type-bar type-bar-s" :style="{ width: stats.typeDistribution.S + '%' }"></div>
+              </div>
+              <span class="type-percent">{{ stats.typeDistribution.S }}%</span>
+            </div>
+            <div class="type-bar-row">
+              <span class="type-label type-g-label">B</span>
+              <div class="type-bar-track">
+                <div class="type-bar type-bar-g" :style="{ width: stats.typeDistribution.G + '%' }"></div>
+              </div>
+              <span class="type-percent">{{ stats.typeDistribution.G }}%</span>
+            </div>
+          </div>
         </div>
 
         <div class="stat-card chart-card">
-          <div class="stat-label">Verlauf (30 Tage)</div>
-          <div class="chart-container">
-            <svg class="trend-chart" viewBox="0 0 1000 200" preserveAspectRatio="none">
-              <!-- Grid Lines -->
-              <line x1="0" y1="50" x2="1000" y2="50" stroke="#f0f0f0" stroke-width="1" />
-              <line x1="0" y1="100" x2="1000" y2="100" stroke="#f0f0f0" stroke-width="1" />
-              <line x1="0" y1="150" x2="1000" y2="150" stroke="#f0f0f0" stroke-width="1" />
-              
-              <!-- Gradient Definition -->
-              <defs>
-                <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.2" />
-                  <stop offset="100%" stop-color="#3b82f6" stop-opacity="0" />
-                </linearGradient>
-              </defs>
-              
-              <!-- Area Path -->
-              <path :d="chartAreaPath" fill="url(#chartGradient)" />
-              
-              <!-- Line Path -->
-              <path :d="chartLinePath" fill="none" stroke="#2563eb" stroke-width="3" vector-effect="non-scaling-stroke" />
-              
-              <!-- Data Points (only show on hover via CSS or always for important ones?) -->
-              <!-- Data Points -->
-               <circle 
-                v-for="(point, i) in chartPoints" 
+          <div class="stat-label">Tests pro Tag (letzte 30 Tage)</div>
+          <div class="bar-chart-container">
+            <div class="bar-chart">
+              <div
+                v-for="(day, i) in filledDailyStats"
                 :key="i"
-                :cx="point.x" 
-                :cy="point.y" 
-                r="4" 
-                class="chart-point"
-                :data-date="getDayName(point.date)"
-                :data-count="point.count"
-              />
-            </svg>
-            
-            <!-- Simple Tooltip/Legend below -->
-            <div class="chart-labels">
-                <span>{{ getDayName(filledDailyStats[0]?.date || '') }}</span>
-                <span>{{ getDayName(filledDailyStats[filledDailyStats.length - 1]?.date || '') }}</span>
+                class="bar-wrapper"
+                :title="getDayName(day.date) + ': ' + day.count + ' Tests'"
+              >
+                <div class="bar-value">{{ day.count }}</div>
+                <div
+                  class="bar"
+                  :style="{ height: getBarHeight(day.count) + '%' }"
+                ></div>
+                <div class="bar-label">{{ getDayName(day.date) }}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -223,10 +233,10 @@ const chartAreaPath = computed(() => {
               <tr>
                 <th>ID</th>
                 <th>E-Mail</th>
-                <th class="score-col type-d">D</th>
-                <th class="score-col type-i">I</th>
-                <th class="score-col type-s">S</th>
-                <th class="score-col type-g">G</th>
+                <th class="score-col type-d"></th>
+                <th class="score-col type-i"></th>
+                <th class="score-col type-s"></th>
+                <th class="score-col type-g"></th>
                 <th>Datum</th>
                 <th>Kontakt</th>
                 <th>Aktion</th>
@@ -338,62 +348,126 @@ const chartAreaPath = computed(() => {
   font-weight: 600;
 }
 
+.stat-trend.down {
+  color: #dc3545;
+  font-weight: 600;
+}
+
 .stat-sub {
   color: #999;
   font-size: 0.9rem;
 }
 
-/* Chart Styles */
+/* DISG Distribution */
+.type-distribution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.type-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.type-label {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.type-d-label { background: #fef2f2; color: #dc3545; }
+.type-i-label { background: #fffbeb; color: #d97706; }
+.type-s-label { background: #f0fdf4; color: #16a34a; }
+.type-g-label { background: #eff6ff; color: #2563eb; }
+
+.type-bar-track {
+  flex: 1;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.type-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.type-bar-d { background: #dc3545; }
+.type-bar-i { background: #d97706; }
+.type-bar-s { background: #16a34a; }
+.type-bar-g { background: #2563eb; }
+
+.type-percent {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+  width: 36px;
+  text-align: right;
+}
+
+/* Bar Chart */
 .chart-card {
-  min-width: 300px;
-  /* Ensure chart container takes remaining space nicely */
-  flex-grow: 2; 
+  grid-column: 1 / -1;
 }
 
-.chart-container {
-    padding-top: 1rem;
-    position: relative;
-    height: 120px;
+.bar-chart-container {
+  padding-top: 0.5rem;
+  overflow-x: auto;
 }
 
-.trend-chart {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 140px;
+  min-width: fit-content;
 }
 
-.chart-point {
-    fill: white;
-    stroke: #2563eb;
-    stroke-width: 2;
-    opacity: 0;
-    transition: opacity 0.2s, r 0.2s;
-    cursor: pointer;
+.bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 28px;
+  height: 100%;
+  justify-content: flex-end;
+  cursor: default;
 }
 
-.chart-container:hover .chart-point {
-    opacity: 1;
+.bar-value {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  margin-bottom: 2px;
+  font-weight: 600;
 }
 
-.chart-point:hover {
-    r: 6;
-    fill: #2563eb;
+.bar {
+  width: 100%;
+  max-width: 32px;
+  background: #3b82f6;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.3s ease;
 }
 
-/* Tooltip (simple CSS based) */
-.chart-point:hover::after {
-    content: attr(data-count) " Tests";
-    position: absolute;
-    top: 0;
-    left: 0;
+.bar-wrapper:hover .bar {
+  background: #2563eb;
 }
 
-.chart-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    color: #94a3b8;
-    margin-top: 0.5rem;
+.bar-label {
+  font-size: 0.6rem;
+  color: #94a3b8;
+  margin-top: 4px;
+  white-space: nowrap;
 }
 
 /* Dashboard Styles */
