@@ -26,7 +26,7 @@
 
         <h4 class="font-serif">Wofür nutzen wir Ihre Daten?</h4>
         <p>
-          Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Andere Daten können zur Analyse Ihres Nutzerverhaltens verwendet werden. Sofern über die Website Verträge geschlossen oder angebahnt werden können, werden die übermittelten Daten auch für Vertragsangebote, Bestellungen oder sonstige Auftragsanfragen verarbeitet.
+          Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Andere Daten werden zur Durchführung der Kurzanalyse und zur Bearbeitung Ihrer Kontaktanfragen verarbeitet.
         </p>
 
         <h4 class="font-serif">Welche Rechte haben Sie bezüglich Ihrer Daten?</h4>
@@ -37,24 +37,41 @@
           Hierzu sowie zu weiteren Fragen zum Thema Datenschutz können Sie sich jederzeit an uns wenden.
         </p>
 
-        <h3 class="font-serif">Analyse-Tools und Tools von Drittanbietern</h3>
-        <p>
-          Beim Besuch dieser Website kann Ihr Surf-Verhalten statistisch ausgewertet werden. Das geschieht vor allem mit sogenannten Analyseprogrammen. Detaillierte Informationen zu diesen Analyseprogrammen finden Sie in der folgenden Datenschutzerklärung.
-        </p>
       </section>
 
       <section>
-        <h2 class="font-serif">2. Hosting</h2>
+        <h2 class="font-serif">2. Hosting und Infrastruktur</h2>
         <h3 class="font-serif">Vercel</h3>
         <p>
           Wir hosten die Inhalte unserer Website bei folgendem Anbieter: Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA.
         </p>
         <p>
-           Die Verwendung von Vercel erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Wir haben ein berechtigtes Interesse an einer möglichst zuverlässigen Darstellung unserer Website. Sofern eine entsprechende Einwilligung abgefragt wurde, erfolgt die Verarbeitung ausschließlich auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG, soweit die Einwilligung die Speicherung von Cookies oder den Zugriff auf Informationen im Endgerät des Nutzers (z. B. Device-Fingerprinting) im Sinne des TDDDG umfasst. Die Einwilligung ist jederzeit widerrufbar.
+          Die Verwendung von Vercel erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Wir haben ein berechtigtes Interesse an einer möglichst zuverlässigen Darstellung unserer Website. Sofern eine entsprechende Einwilligung abgefragt wurde, erfolgt die Verarbeitung ausschließlich auf Grundlage von Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG, soweit die Einwilligung die Speicherung von Cookies oder den Zugriff auf Informationen im Endgerät des Nutzers (z. B. Device-Fingerprinting) im Sinne des TDDDG umfasst. Die Einwilligung ist jederzeit widerrufbar.
         </p>
-         <p>
-            Da Sie auch den Amazon SES Service für E-Mails nutzen, werden Daten gegebenenfalls auch über Amazon Web Services (AWS) verarbeitet.
-         </p>
+
+        <h3 class="font-serif">Vercel Postgres (Datenbank)</h3>
+        <p>
+          Zur Speicherung von Nutzerdaten (z. B. E-Mail-Adressen, Analyseergebnisse, Sitzungsdaten) verwenden wir Vercel Postgres, einen von Vercel Inc. bereitgestellten Datenbankdienst. Die Daten werden auf Servern von Vercel in den USA gespeichert.
+        </p>
+        <p>
+          Die Verarbeitung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer sicheren und effizienten Datenverwaltung).
+        </p>
+
+        <h3 class="font-serif">Vercel Blob (Dateispeicher)</h3>
+        <p>
+          Für die Speicherung von Dateien (z. B. generierte PDF-Dokumente) nutzen wir Vercel Blob, einen Dateispeicherdienst von Vercel Inc. Die Daten werden auf Servern von Vercel in den USA verarbeitet.
+        </p>
+        <p>
+          Die Nutzung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Wir haben ein berechtigtes Interesse an einer zuverlässigen Speicherung von Dokumenten.
+        </p>
+
+        <h3 class="font-serif">Upstash Redis</h3>
+        <p>
+          Wir verwenden Upstash Redis (Upstash, Inc.) als Zwischenspeicher (Cache) für temporäre Daten wie Sitzungsinformationen und Verifizierungscodes. Upstash verarbeitet Daten auf Servern in der EU und/oder den USA.
+        </p>
+        <p>
+          Die Nutzung erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Wir haben ein berechtigtes Interesse an einer performanten und sicheren Zwischenspeicherung von Daten.
+        </p>
       </section>
 
       <section>
@@ -98,12 +115,6 @@
 
         <h3 class="font-serif">Datenschutzbeauftragter</h3>
         <p>
-          <strong>Adler Inkasso GmbH – Datenschutz</strong><br>
-          z. Hd. Herrn Dipl.-Wirtschaftsjur. Jörg Thielmann<br>
-          Petersberger Str. 32<br>
-          36037 Fulda
-        </p>
-        <p>
           Telefon: +49 661 90238 20<br>
           E‑Mail: datenschutz@power4-group.de
         </p>
@@ -118,12 +129,9 @@
           Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Die Rechtmäßigkeit der bis zum Widerruf erfolgten Datenverarbeitung bleibt vom Widerruf unberührt.
         </p>
 
-        <h3 class="font-serif">Widerspruchsrecht gegen die Datenerhebung in besonderen Fällen sowie gegen Direktwerbung (Art. 21 DSGVO)</h3>
+        <h3 class="font-serif">Widerspruchsrecht gegen die Datenerhebung in besonderen Fällen (Art. 21 DSGVO)</h3>
         <p>
           WENN DIE DATENVERARBEITUNG AUF GRUNDLAGE VON ART. 6 ABS. 1 LIT. E ODER F DSGVO ERFOLGT, HABEN SIE JEDERZEIT DAS RECHT, AUS GRÜNDEN, DIE SICH AUS IHRER BESONDEREN SITUATION ERGEBEN, GEGEN DIE VERARBEITUNG IHRER PERSONENBEZOGENEN DATEN WIDERSPRUCH EINZULEGEN; DIES GILT AUCH FÜR EIN AUF DIESE BESTIMMUNGEN GESTÜTZTES PROFILING. DIE JEWEILIGE RECHTSGRUNDLAGE, AUF DENEN EINE VERARBEITUNG BERUHT, ENTNEHMEN SIE DIESER DATENSCHUTZERKLÄRUNG. WENN SIE WIDERSPRUCH EINLEGEN, WERDEN WIR IHRE BETROFFENEN PERSONENBEZOGENEN DATEN NICHT MEHR VERARBEITEN, ES SEI DENN, WIR KÖNNEN ZWINGENDE SCHUTZWÜRDIGE GRÜNDE FÜR DIE VERARBEITUNG NACHWEISEN, DIE IHRE INTERESSEN, RECHTE UND FREIHEITEN ÜBERWIEGEN ODER DIE VERARBEITUNG DIENT DER GELTENDMACHUNG, AUSÜBUNG ODER VERTEIDIGUNG VON RECHTSANSPRÜCHEN (WIDERSPRUCH NACH ART. 21 ABS. 1 DSGVO).
-        </p>
-        <p>
-          WERDEN IHRE PERSONENBEZOGENEN DATEN VERARBEITET, UM DIREKTWERBUNG ZU BETREIBEN, SO HABEN SIE DAS RECHT, JEDERZEIT WIDERSPRUCH GEGEN DIE VERARBEITUNG SIE BETREFFENDER PERSONENBEZOGENEN DATEN ZUM ZWECKE DERARTIGER WERBUNG EINZULEGEN; DIES GILT AUCH FÜR DAS PROFILING, SOWEIT ES MIT SOLCHER DIREKTWERBUNG IN VERBINDUNG STEHT. WENN SIE WIDERSPRECHEN, WERDEN IHRE PERSONENBEZOGENEN DATEN ANSCHLIESSEND NICHT MEHR ZUM ZWECKE DER DIREKTWERBUNG VERWENDET (WIDERSPRUCH NACH ART. 21 ABS. 2 DSGVO).
         </p>
 
         <h3 class="font-serif">Beschwerderecht bei der zuständigen Aufsichtsbehörde</h3>
@@ -157,7 +165,7 @@
 
         <h3 class="font-serif">SSL- bzw. TLS-Verschlüsselung</h3>
         <p>
-          Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte, wie zum Beispiel Bestellungen oder Anfragen, die Sie an uns als Seitenbetreiber senden, eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von „http://“ auf „https://“ wechselt und an dem Schloss-Symbol in Ihrer Browserzeile.
+          Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte, wie zum Beispiel Anfragen, die Sie an uns als Seitenbetreiber senden, eine SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von „http://“ auf „https://“ wechselt und an dem Schloss-Symbol in Ihrer Browserzeile.
         </p>
         <p>
           Wenn die SSL- bzw. TLS-Verschlüsselung aktiviert ist, können die Daten, die Sie an uns übermitteln, nicht von Dritten mitgelesen werden.
@@ -174,22 +182,17 @@
         
         <h3 class="font-serif">Cookies</h3>
         <p>
-          Unsere Internetseiten verwenden so genannte „Cookies“. Cookies sind kleine Datenpakete und richten auf Ihrem Endgerät keinen Schaden an. Sie werden entweder vorübergehend für die Dauer einer Sitzung (Session-Cookies) oder dauerhaft (permanente Cookies) auf Ihrem Endgerät gespeichert. Session-Cookies werden nach Ende Ihres Besuchs automatisch gelöscht. Permanente Cookies bleiben auf Ihrem Endgerät gespeichert, bis Sie diese selbst löschen oder eine automatische Löschung durch Ihren Webbrowser erfolgt.
+          Unsere Internetseiten verwenden so genannte „Cookies". Cookies sind kleine Datenpakete und richten auf Ihrem Endgerät keinen Schaden an. Sie werden entweder vorübergehend für die Dauer einer Sitzung (Session-Cookies) oder dauerhaft (permanente Cookies) auf Ihrem Endgerät gespeichert. Session-Cookies werden nach Ende Ihres Besuchs automatisch gelöscht. Permanente Cookies bleiben auf Ihrem Endgerät gespeichert, bis Sie diese selbst löschen oder eine automatische Löschung durch Ihren Webbrowser erfolgt.
         </p>
         <p>
-          Cookies können von uns (First-Party-Cookies) oder von Drittunternehmen stammen (sog. Third-Party-Cookies). Third-Party-Cookies ermöglichen die Einbindung bestimmter Dienstleistungen von Drittunternehmen innerhalb von Webseiten (z. B. Cookies zur Abwicklung von Zahlungsdienstleistungen).
+          Wir verwenden ausschließlich technisch notwendige First-Party-Cookies (z. B. für die Authentifizierung und Sitzungsverwaltung). Third-Party-Cookies oder Cookies zu Werbe- oder Trackingzwecken werden nicht eingesetzt.
         </p>
         <p>
-          Cookies haben verschiedene Funktionen. Zahlreiche Cookies sind technisch notwendig, da bestimmte Webseitenfunktionen ohne diese nicht funktionieren würden (z. B. die Warenkorbfunktion oder die Anzeige von Videos). Andere Cookies können zur Auswertung des Nutzerverhaltens oder zu Werbezwecken verwendet werden.
-        </p>
-        <p>
-          Cookies, die zur Durchführung des elektronischen Kommunikationsvorgangs, zur Bereitstellung bestimmter, von Ihnen erwünschter Funktionen (z. B. für die Warenkorbfunktion) oder zur Optimierung der Website (z. B. Cookies zur Messung des Webpublikums) erforderlich sind (notwendige Cookies), werden auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO gespeichert, sofern keine andere Rechtsgrundlage angegeben wird. Der Websitebetreiber hat ein berechtigtes Interesse an der Speicherung von notwendigen Cookies zur technisch fehlerfreien und optimierten Bereitstellung seiner Dienste. Sofern eine Einwilligung zur Speicherung von Cookies und vergleichbaren Wiedererkennungstechnologien abgefragt wurde, erfolgt die Verarbeitung ausschließlich auf Grundlage dieser Einwilligung (Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG); die Einwilligung ist jederzeit widerrufbar.
+          Technisch notwendige Cookies werden auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO gespeichert. Der Websitebetreiber hat ein berechtigtes Interesse an der Speicherung von notwendigen Cookies zur technisch fehlerfreien Bereitstellung seiner Dienste.
         </p>
         <p>
           Sie können Ihren Browser so einstellen, dass Sie über das Setzen von Cookies informiert werden und Cookies nur im Einzelfall erlauben, die Annahme von Cookies für bestimmte Fälle oder generell ausschließen sowie das automatische Löschen der Cookies beim Schließen des Browsers aktivieren. Bei der Deaktivierung von Cookies kann die Funktionalität dieser Website eingeschränkt sein.
         </p>
-
-
 
         <h3 class="font-serif">Kontaktformular</h3>
         <p>
@@ -202,9 +205,9 @@
           Die von Ihnen im Kontaktformular eingegebenen Daten verbleiben bei uns, bis Sie uns zur Löschung auffordern, Ihre Einwilligung zur Speicherung widerrufen oder der Zweck für die Datenspeicherung entfällt (z. B. nach abgeschlossener Bearbeitung Ihrer Anfrage). Zwingende gesetzliche Bestimmungen – insbesondere Aufbewahrungsfristen – bleiben unberührt.
         </p>
 
-        <h3 class="font-serif">Anfrage per E‑Mail, Telefon oder Telefax</h3>
+        <h3 class="font-serif">Anfrage per E‑Mail oder Telefon</h3>
         <p>
-          Wenn Sie uns per E‑Mail, Telefon oder Telefax kontaktieren, wird Ihre Anfrage inklusive aller daraus hervorgehenden personenbezogenen Daten (Name, Anfrage) zum Zwecke der Bearbeitung Ihres Anliegens bei uns gespeichert und verarbeitet. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.
+          Wenn Sie uns per E‑Mail oder Telefon kontaktieren, wird Ihre Anfrage inklusive aller daraus hervorgehenden personenbezogenen Daten (Name, Anfrage) zum Zwecke der Bearbeitung Ihres Anliegens bei uns gespeichert und verarbeitet. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.
         </p>
         <p>
           Die Verarbeitung dieser Daten erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSGVO, sofern Ihre Anfrage mit der Erfüllung eines Vertrags zusammenhängt oder zur Durchführung vorvertraglicher Maßnahmen erforderlich ist. In allen übrigen Fällen beruht die Verarbeitung auf unserem berechtigten Interesse an der effektiven Bearbeitung der an uns gerichteten Anfragen (Art. 6 Abs. 1 lit. f DSGVO) oder auf Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO) sofern diese abgefragt wurde; die Einwilligung ist jederzeit widerrufbar.
@@ -212,17 +215,13 @@
         <p>
           Die von Ihnen an uns per Kontaktanfragen übersandten Daten verbleiben bei uns, bis Sie uns zur Löschung auffordern, Ihre Einwilligung zur Speicherung widerrufen oder der Zweck für die Datenspeicherung entfällt (z. B. nach abgeschlossener Bearbeitung Ihrer Anliegens). Zwingende gesetzliche Bestimmungen – insbesondere gesetzliche Aufbewahrungsfristen – bleiben unberührt.
         </p>
-
-
       </section>
-
-
 
       <section>
         <h2 class="font-serif">5. Plugins und Tools</h2>
-        <h3 class="font-serif">Resend</h3>
+        <h3 class="font-serif">Resend (E-Mail-Versand)</h3>
         <p>
-          Wir nutzen für den Versand von System-E-Mails (z.B. Bestätigungen von Kontaktanfragen) den Dienst Resend. Anbieter ist die Resend, Inc., 2261 Market Street #4816, San Francisco, CA 94114, USA.
+          Wir nutzen für den Versand von System-E-Mails (z. B. Verifizierungscodes, Bestätigungen von Kontaktanfragen, Ergebnis-E-Mails) den Dienst Resend. Anbieter ist die Resend, Inc., 2261 Market Street #4816, San Francisco, CA 94114, USA.
         </p>
         <p>
           Die für den Versand notwendigen Daten (z. B. E-Mail-Adresse, Name) werden auf den Servern von Resend in den USA verarbeitet.
@@ -231,10 +230,7 @@
           Der Einsatz von Resend erfolgt auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO. Wir haben ein berechtigtes Interesse an einem technisch sicheren und zuverlässigen Versand unserer E-Mails.
         </p>
         <p>
-           Weitere Informationen entnehmen Sie der Datenschutzerklärung von Resend: <a href="https://resend.com/legal/privacy-policy" target="_blank">https://resend.com/legal/privacy-policy</a>.
-        </p>
-        <p>
-          Das Unternehmen verfügt über eine Zertifizierung nach dem „EU‑US Data Privacy Framework“ (DPF).
+          Weitere Informationen entnehmen Sie der Datenschutzerklärung von Resend: <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">https://resend.com/legal/privacy-policy</a>.
         </p>
 
         <h4 class="font-serif">Auftragsverarbeitung</h4>
@@ -242,16 +238,19 @@
           Wir haben einen Vertrag über Auftragsverarbeitung (AVV) zur Nutzung des oben genannten Dienstes geschlossen. Hierbei handelt es sich um einen datenschutzrechtlich vorgeschriebenen Vertrag, der gewährleistet, dass dieser die personenbezogenen Daten unserer Websitebesucher nur nach unseren Weisungen und unter Einhaltung der DSGVO verarbeitet.
         </p>
 
+        <h3 class="font-serif">PDF-Erstellung (serverseitig)</h3>
+        <p>
+          Zur Erstellung von PDF-Dokumenten (z. B. Ergebnis-PDFs, Kontaktbestätigungen) nutzen wir serverseitig die Bibliothek Puppeteer. Die PDF-Erstellung erfolgt ausschließlich auf unserem Server bei Vercel. Es werden keine Daten an Dritte übermittelt.
+        </p>
+
         <h3 class="font-serif">Google Fonts (lokales Hosting)</h3>
         <p>
-           Diese Seite nutzt zur einheitlichen Darstellung von Schriftarten so genannte Google Fonts, die von Google bereitgestellt werden. Die Google Fonts sind lokal installiert. Eine Verbindung zu Servern von Google findet dabei nicht statt.
+          Diese Seite nutzt zur einheitlichen Darstellung von Schriftarten so genannte Google Fonts, die von Google bereitgestellt werden. Die Google Fonts sind lokal installiert. Eine Verbindung zu Servern von Google findet dabei nicht statt.
         </p>
         <p>
-           Weitere Informationen zu Google Fonts: <a href="https://developers.google.com/fonts/faq" target="_blank">https://developers.google.com/fonts/faq</a> – Datenschutzerklärung von Google: <a href="https://policies.google.com/privacy?hl=de" target="_blank">https://policies.google.com/privacy?hl=de</a>.
+          Weitere Informationen zu Google Fonts: <a href="https://developers.google.com/fonts/faq" target="_blank" rel="noopener noreferrer">https://developers.google.com/fonts/faq</a> – Datenschutzerklärung von Google: <a href="https://policies.google.com/privacy?hl=de" target="_blank" rel="noopener noreferrer">https://policies.google.com/privacy?hl=de</a>.
         </p>
       </section>
-
-
     </div>
   </div>
 </template>
