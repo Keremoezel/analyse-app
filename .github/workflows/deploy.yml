@@ -37,20 +37,29 @@ jobs:
           NITRO_PRESET: node-server
 
       - name: Setup SSH key
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+          DEPLOY_SSH_PORT: ${{ secrets.DEPLOY_SSH_PORT }}
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          echo "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p ${{ secrets.DEPLOY_SSH_PORT || 22 }} -H ${{ secrets.DEPLOY_SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -p ${DEPLOY_SSH_PORT:-22} -H $DEPLOY_SSH_HOST >> ~/.ssh/known_hosts
 
       - name: Install rsync
         run: sudo apt-get install -y rsync
 
       - name: Deploy via rsync
+        env:
+          DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+          DEPLOY_SSH_PORT: ${{ secrets.DEPLOY_SSH_PORT }}
+          DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          DEPLOY_TARGET_PATH: ${{ secrets.DEPLOY_TARGET_PATH }}
         run: |
           rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_SSH_PORT || 22 }}" \
+            -e "ssh -i ~/.ssh/deploy_key -p ${DEPLOY_SSH_PORT:-22}" \
             .output/ \
-            ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }}:${{ secrets.DEPLOY_TARGET_PATH }}/
-          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_SSH_PORT || 22 }} ${{ secrets.DEPLOY_SSH_USER }}@${{ secrets.DEPLOY_SSH_HOST }} -t 'killall node || true'
+            $DEPLOY_SSH_USER@$DEPLOY_SSH_HOST:$DEPLOY_TARGET_PATH/
+          ssh -i ~/.ssh/deploy_key -p ${DEPLOY_SSH_PORT:-22} $DEPLOY_SSH_USER@$DEPLOY_SSH_HOST -t 'killall node || true'
  
