@@ -43,6 +43,9 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p ${{ secrets.DEPLOY_SSH_PORT || 22 }} -H ${{ secrets.DEPLOY_SSH_HOST }} >> ~/.ssh/known_hosts
 
+      - name: Install rsync
+        run: sudo apt-get install -y rsync
+
       - name: Deploy via rsync
         run: |
           rsync -avz --delete \
