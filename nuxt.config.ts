@@ -21,26 +21,15 @@ export default defineNuxtConfig({
     },
   },
 
-  // Vercel deployment preset
+  // Node.js server deployment (Hetzner)
   nitro: {
-    preset: 'vercel',
+    preset: 'node-server',
     serverAssets: [
       {
         baseName: 'templates',
         dir: './server/templates'
       }
-    ],
-    vercel: {
-      config: {
-        // @ts-ignore - Nitro/Vercel functions config
-        functions: {
-          'server/api/email/*.post.ts': {
-            memory: 1024,
-            maxDuration: 30
-          }
-        }
-      }
-    }
+    ]
   },
 
   eslint: {
