@@ -31,7 +31,7 @@ watch(() => route.path, () => {
         <NuxtLink to="/datenschutz" class="nav-link">Datenschutz</NuxtLink>
         <NuxtLink to="/impressum" class="nav-link">Impressum</NuxtLink>
         <NuxtLink to="/admin" class="nav-link admin-link">
-          <Icon name="heroicons:lock-closed" size="16" />
+          <Icon name="heroicons:lock-closed" size="16" /> 
           Admin
         </NuxtLink>
       </div>

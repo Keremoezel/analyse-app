@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Clear Cookie
-    deleteCookie(event, 'admin_token')
+    deleteCookie(event, 'admin_token') //test
 
     return { success: true }
 })
